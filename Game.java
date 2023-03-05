@@ -6,7 +6,7 @@ public class Game
 {
     private float seed;
     private NoiseGenerator noise;
-    public List<Vector2> cities = new ArrayList<Vector2>();
+    public List<City> cities = new ArrayList<City>();
 
     public Game(float seed)
     {
@@ -15,7 +15,7 @@ public class Game
         Random random = new Random();
         for(int i = 0; i < 10; i++)
         {
-            cities.add(new Vector2(random.nextInt(10), random.nextInt(10)));
+            cities.add(new City(new Vector2(random.nextInt(10), random.nextInt(10))));
         }
     }
 
@@ -41,7 +41,7 @@ public class Game
     {
         for(int i = 0; i < cities.size(); i++)
         {
-            if(cities.get(i).equals(pos))
+            if(cities.get(i).position.equals(pos))
                 return i;
         }
         return -1;

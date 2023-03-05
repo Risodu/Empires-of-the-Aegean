@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
+import java.awt.Window;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.event.MouseMotionListener;
@@ -13,7 +13,6 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
-import javax.swing.JOptionPane;
 
 
 public class Board extends JPanel implements MouseMotionListener, MouseWheelListener, MouseListener
@@ -69,12 +68,13 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
             }
         }
 
-        g2d.setColor(new Color(255, 170, 0));
         Ellipse2D circle = new Ellipse2D.Float();
         for(int i = 0; i < game.cities.size(); i++)
         {
-            Vector2 pos = game.cities.get(i);
+            City city = game.cities.get(i);
+            Vector2 pos = city.position;
             Vector2 screenPoint = camera.worldToScreen(pos.x + 0.2f, pos.y + 0.2f);
+            g2d.setColor(new Color(city.r, city.g, city.b));
             circle.setFrame(screenPoint.x, screenPoint.y, camera.scale * 0.6f, camera.scale * 0.6f);
             g2d.fill(circle);
         }
@@ -101,9 +101,8 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     @Override
     public void mouseWheelMoved(MouseWheelEvent e)
     {
-        if(e.getWheelRotation() == 1 ? camera.scale < 2 : camera.scale > 50) return;
+        if(e.getWheelRotation() == 1 ? camera.scale < 10 : camera.scale > 50) return;
         camera.scale *= e.getWheelRotation() == 1 ? 0.8 : 1.25;
-        System.out.println(camera.scale);
         repaint();
     }
 
@@ -111,15 +110,16 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     public void mouseClicked(MouseEvent e)
     {
         Vector2 tile = camera.screenToWorld(e.getX(), e.getY());
-        System.out.println(tile.x);
-        System.out.println(tile.y);
         String text = "Selected tile: " + game.GetTerrainAt(tile).displayName;
-        if(game.GetCity(tile) != -1)
+        int city = game.GetCity(tile);
+        if(city != -1)
         {
-            System.out.println(tile);
             text += "\nThere is a city on this tile";
         }
-        JOptionPane.showMessageDialog(null, text);
+        // JOptionPane.showMessageDialog(null, text);
+        TileDialog d = new TileDialog((Window)app, text, game, city);
+        // d.setLocation((getWidth() - d.getWidth()) / 2, (getHeight() - d.getWidth()) / 2);
+        // add(d);
     }
 
     @Override

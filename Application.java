@@ -1,7 +1,12 @@
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.Dimension;
 import java.util.Random;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
@@ -10,6 +15,7 @@ public class Application extends JFrame
 {   
     float i = 0;
     final BufferStrategy bufferStrategy = getBufferStrategy();
+    JSplitPane splitPane;
     public Application()
     {
         initUI();
@@ -18,7 +24,11 @@ public class Application extends JFrame
     private void initUI()
     {
         Board board = new Board(i, this);
-        add(board);
+        JPanel infoPanel = new JPanel();
+        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, board, infoPanel);
+        splitPane.setDividerSize(0);
+        add(splitPane);
+        // infoPanel.add(new JButton("End turn"));
 
         setSize(500, 500);
 
@@ -27,13 +37,12 @@ public class Application extends JFrame
         setLocationRelativeTo(null);
     }
     
-    public void Draw()
+    @Override
+    public void paint(Graphics g)
     {
         BufferStrategy bs = getBufferStrategy();
-        super.paint(getGraphics());;
-        if(bs == null)
-            System.out.println("xd");
-        bs.show(); // swap buffers
+        super.paint(getGraphics());
+        splitPane.setDividerLocation(getHeight() - 80);
     }
     
     public static void main(String[] args)
