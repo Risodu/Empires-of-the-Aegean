@@ -1,21 +1,21 @@
 import java.awt.EventQueue;
 import java.awt.Graphics;
-import java.awt.Dimension;
-import java.util.Random;
-
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferStrategy;
 
-public class Application extends JFrame
+public class Application extends JFrame implements ActionListener
 {   
     float i = 0;
-    final BufferStrategy bufferStrategy = getBufferStrategy();
     JSplitPane splitPane;
+    JLabel turnLabel;
+    JButton endTurnButton;
+    int turn = 1;
+    Board board;
     public Application()
     {
         initUI();
@@ -23,12 +23,19 @@ public class Application extends JFrame
 
     private void initUI()
     {
-        Board board = new Board(i, this);
+        board = new Board(i, this);
         JPanel infoPanel = new JPanel();
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, board, infoPanel);
         splitPane.setDividerSize(0);
         add(splitPane);
-        // infoPanel.add(new JButton("End turn"));
+
+        turnLabel = new JLabel("Turn: 1");
+        infoPanel.add(turnLabel);
+
+        endTurnButton = new JButton("End turn");
+        endTurnButton.addActionListener(this);
+        endTurnButton.setActionCommand("endTurn");
+        infoPanel.add(endTurnButton);
 
         setSize(500, 500);
 
@@ -40,7 +47,6 @@ public class Application extends JFrame
     @Override
     public void paint(Graphics g)
     {
-        BufferStrategy bs = getBufferStrategy();
         super.paint(getGraphics());
         splitPane.setDividerLocation(getHeight() - 80);
     }
@@ -51,13 +57,15 @@ public class Application extends JFrame
             Application ex = new Application();
             ex.setVisible(true);
         });
+    }
 
-        Random rand = new Random();
-        NoiseGenerator noise = new NoiseGenerator(0);
-        // for(int i = 0; i < 1000; i++)
-        // {
-        //     System.out.print((float)Math.round(noise.smoothNoise(rand.nextDouble() * 100, rand.nextDouble() * 100, rand.nextDouble() * 100) * 1000) / 1000);
-        //     System.out.print(',');
-        // }
+    public void actionPerformed(ActionEvent e)
+    {
+        if("endTurn".equals(e.getActionCommand()))
+        {
+            turn += 1;
+            turnLabel.setText("Turn: " + turn);
+            board.endTurn();
+        }
     }
 }

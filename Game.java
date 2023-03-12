@@ -4,18 +4,30 @@ import java.util.ArrayList;
 
 public class Game
 {
-    private float seed;
     private NoiseGenerator noise;
     public List<City> cities = new ArrayList<City>();
 
     public Game(float seed)
     {
-        this.seed = seed;
         noise = new NoiseGenerator(seed);
         Random random = new Random();
-        for(int i = 0; i < 10; i++)
+        cities.add(new City(new Vector2(random.nextInt(10), random.nextInt(10))));
+        // for(int i = 0; i < 10; i++)
+        // {
+        //     cities.add(new City(new Vector2(random.nextInt(10), random.nextInt(10))));
+        // }
+    }
+
+    public void endTurn()
+    {
+        for(int i = 0; i < cities.size(); i++)
         {
-            cities.add(new City(new Vector2(random.nextInt(10), random.nextInt(10))));
+            City city = cities.get(i);
+            city.endTurn();
+            if(city.r >= 10)
+                cities.get(i).r -= 10;
+            if(city.b <= 245)
+                cities.get(i).b += 10;
         }
     }
 

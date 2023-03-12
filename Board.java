@@ -43,7 +43,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
 
     void drawMap(Graphics g)
     {
-        long time = System.currentTimeMillis();
+        // long time = System.currentTimeMillis();
         Graphics2D g2d = (Graphics2D)g;
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
@@ -81,6 +81,12 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
         // System.out.println(System.currentTimeMillis() - time);
     }
 
+    public void endTurn()
+    {
+        game.endTurn();
+        repaint();
+    }
+
     @Override
     public void mouseMoved(MouseEvent e)
     {
@@ -110,16 +116,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     public void mouseClicked(MouseEvent e)
     {
         Vector2 tile = camera.screenToWorld(e.getX(), e.getY());
-        String text = "Selected tile: " + game.GetTerrainAt(tile).displayName;
-        int city = game.GetCity(tile);
-        if(city != -1)
-        {
-            text += "\nThere is a city on this tile";
-        }
-        // JOptionPane.showMessageDialog(null, text);
-        TileDialog d = new TileDialog((Window)app, text, game, city);
-        // d.setLocation((getWidth() - d.getWidth()) / 2, (getHeight() - d.getWidth()) / 2);
-        // add(d);
+        new TileDialog((Window)app, tile, game);
     }
 
     @Override
