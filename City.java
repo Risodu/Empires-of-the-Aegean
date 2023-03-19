@@ -1,27 +1,43 @@
 public class City
 {
     public Vector2 position;
-    public int r, g, b, population, production, farmers, builders;
+    public int population, materials, houses, farmers, builders;
 
     public City(Vector2 pos)
     {
         position = pos;
-        r = 255;
-        g = 170;
-        b = 0;
         population = 10;
+        houses = 10;
     }
 
     public void endTurn()
     {
-        production += builders;
-        float food = farmers - population * 0.2f;
-        int populationInc = Math.round(food > 0 ? food * 0.5f : food * 2);
+        materials += getMaterialProduction();
+        int populationInc = getPopulationIncrease();
+        
+        if(population + populationInc > houses)
+        {
+            int builded = Math.min(population + populationInc - houses, materials / 2);
+            houses += builded;
+            populationInc = Math.min(population + populationInc, houses) - population;
+            materials -= builded * 2;
+        }
+
         float multiplier = 1 + ((float)populationInc / population);
-        System.out.println(populationInc);
         farmers *= multiplier;
         builders *= multiplier;
         population += populationInc;
+    }
+
+    public int getPopulationIncrease()
+    {
+        float food = farmers - population * 0.2f;
+        return Math.round(food > 0 ? food * 0.5f : food * 2);
+    }
+
+    public int getMaterialProduction()
+    {
+        return builders;
     }
 
     public void fixTasks()

@@ -24,10 +24,6 @@ public class Game
         {
             City city = cities.get(i);
             city.endTurn();
-            if(city.r >= 10)
-                cities.get(i).r -= 10;
-            if(city.b <= 245)
-                cities.get(i).b += 10;
         }
     }
 

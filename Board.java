@@ -69,12 +69,12 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
         }
 
         Ellipse2D circle = new Ellipse2D.Float();
+        g2d.setColor(new Color(255, 170, 0));
         for(int i = 0; i < game.cities.size(); i++)
         {
             City city = game.cities.get(i);
             Vector2 pos = city.position;
             Vector2 screenPoint = camera.worldToScreen(pos.x + 0.2f, pos.y + 0.2f);
-            g2d.setColor(new Color(city.r, city.g, city.b));
             circle.setFrame(screenPoint.x, screenPoint.y, camera.scale * 0.6f, camera.scale * 0.6f);
             g2d.fill(circle);
         }
