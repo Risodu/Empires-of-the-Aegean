@@ -12,12 +12,12 @@ public class Camera
     public Vector2 screenToWorld(float x, float y)
     {
         // return new Vector2((int)pos.x + x / scale, (int)pos.y + y / scale);
-        return new Vector2((int)Math.floor(pos.x + x / scale), (int)Math.floor(pos.y + y / scale));
+        return new Vector2((int)Math.floor(pos.x + x / (int)scale), (int)Math.floor(pos.y + y / (int)scale));
     }
 
     public Vector2 worldToScreen(float x, float y)
     {
-        return new Vector2((x - pos.x) * scale, (y - pos.y) * scale);
+        return new Vector2((x - pos.x) * (int)scale, (y - pos.y) * (int)scale);
     }
 
     public void changeScale(float multiplier, float x, float y)

@@ -45,11 +45,11 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     {
         // long time = System.currentTimeMillis();
         Graphics2D g2d = (Graphics2D)g;
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        // RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
-        rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        // rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-        g2d.setRenderingHints(rh);
+        // g2d.setRenderingHints(rh);
 
         Rectangle2D rect = new Rectangle2D.Float();
         g2d.setStroke(new BasicStroke(10));
@@ -62,9 +62,17 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
             for(int j = (int)from.y; j <= to.y; j++)
             {
                 Vector2 screenPoint = camera.worldToScreen(i, j);
-                rect.setFrame(screenPoint.x, screenPoint.y, camera.scale, camera.scale);
-                g2d.setColor(game.GetTerrainAt(i, j).color);
-                g2d.fill(rect);
+                TerrainType terrain = game.GetTerrainAt(i, j);
+                if(terrain.image == null)
+                {
+                    rect.setFrame(screenPoint.x, screenPoint.y, camera.scale, camera.scale);
+                    g2d.setColor(terrain.color);
+                    g2d.fill(rect);
+                }
+                else
+                {
+                    g2d.drawImage(terrain.image, (int)screenPoint.x, (int)screenPoint.y, (int)camera.scale, (int)camera.scale, null);
+                }
             }
         }
 
