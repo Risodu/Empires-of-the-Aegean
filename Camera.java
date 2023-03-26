@@ -19,4 +19,12 @@ public class Camera
     {
         return new Vector2((x - pos.x) * scale, (y - pos.y) * scale);
     }
+
+    public void changeScale(float multiplier, float x, float y)
+    {
+        float newScale = scale * multiplier;
+        pos.x += x / scale - x / newScale;
+        pos.y += y / scale - y / newScale;
+        scale = newScale;
+    }
 }

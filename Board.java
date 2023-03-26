@@ -108,7 +108,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     public void mouseWheelMoved(MouseWheelEvent e)
     {
         if(e.getWheelRotation() == 1 ? camera.scale < 10 : camera.scale > 50) return;
-        camera.scale *= e.getWheelRotation() == 1 ? 0.8 : 1.25;
+        camera.changeScale(e.getWheelRotation() == 1 ? 0.8f : 1.25f, e.getX(), e.getY());
         repaint();
     }
 
