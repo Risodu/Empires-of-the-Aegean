@@ -39,12 +39,6 @@ public class Application extends JFrame
         super.paint(getGraphics());
         splitPane.setDividerLocation(getHeight() - 80);
     }
-
-    public void endTurn()
-    {
-        turn += 1;
-        board.endTurn();
-    }
     
     public static void main(String[] args)
     {

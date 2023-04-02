@@ -18,9 +18,10 @@ import javax.swing.JPanel;
 public class Board extends JPanel implements MouseMotionListener, MouseWheelListener, MouseListener
 {
     private Camera camera;
-    private int lastMouseX, lastMouseY;
+    private int lastMouseX, lastMouseY, buildsFrom;
     private Application app;
     private Game game;
+    private boolean buildsCity = false;
 
     public Board(float seed, Application app)
     {
@@ -95,6 +96,12 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
         repaint();
     }
 
+    public void buildCity()
+    {
+        buildsCity = true;
+        buildsFrom = -1;
+    }
+
     @Override
     public void mouseMoved(MouseEvent e)
     {
@@ -124,7 +131,36 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     public void mouseClicked(MouseEvent e)
     {
         Vector2 tile = camera.screenToWorld(e.getX(), e.getY());
-        new TileDialog((Window)app, tile, game);
+
+        if(!buildsCity) // Not building city
+        {
+            new TileDialog((Window)app, tile, game);
+            return;
+        }
+
+        if(buildsFrom != -1) // Source city selected -> builds city
+        {
+            City building = new City(tile);
+            game.cities.get(buildsFrom).population -= 10;
+            game.cities.get(buildsFrom).fixTasks();;
+            game.cities.get(buildsFrom).materials -= 40;
+            game.cities.add(building);
+            app.toolbar.HideMessage();
+            buildsCity = false;
+            repaint();
+            return;
+        }        
+        
+        int selected = game.GetCity(tile);
+        if(selected == -1 || game.cities.get(selected).population <= 10 || game.cities.get(selected).materials < 40) // Wrong tile
+        {
+            buildsCity = false;
+            app.toolbar.HideMessage();
+            return;
+        }
+
+        buildsFrom = selected; // Selects city
+        app.toolbar.ShowMessage("Select location of new city");
     }
 
     @Override
