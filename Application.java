@@ -1,19 +1,16 @@
 import java.awt.EventQueue;
 import java.awt.Graphics;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-public class Application extends JFrame implements ActionListener
+public class Application extends JFrame
 {   
     float i = 0;
     JSplitPane splitPane;
-    JLabel turnLabel;
-    JButton endTurnButton;
+    Toolbar toolbar;
     int turn = 1;
     Board board;
     public Application()
@@ -24,18 +21,10 @@ public class Application extends JFrame implements ActionListener
     private void initUI()
     {
         board = new Board(i, this);
-        JPanel infoPanel = new JPanel();
-        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, board, infoPanel);
+        toolbar = new Toolbar(this);
+        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, board, toolbar);
         splitPane.setDividerSize(0);
         add(splitPane);
-
-        turnLabel = new JLabel("Turn: 1");
-        infoPanel.add(turnLabel);
-
-        endTurnButton = new JButton("End turn");
-        endTurnButton.addActionListener(this);
-        endTurnButton.setActionCommand("endTurn");
-        infoPanel.add(endTurnButton);
 
         setSize(500, 500);
 
@@ -50,6 +39,12 @@ public class Application extends JFrame implements ActionListener
         super.paint(getGraphics());
         splitPane.setDividerLocation(getHeight() - 80);
     }
+
+    public void endTurn()
+    {
+        turn += 1;
+        board.endTurn();
+    }
     
     public static void main(String[] args)
     {
@@ -57,15 +52,5 @@ public class Application extends JFrame implements ActionListener
             Application ex = new Application();
             ex.setVisible(true);
         });
-    }
-
-    public void actionPerformed(ActionEvent e)
-    {
-        if("endTurn".equals(e.getActionCommand()))
-        {
-            turn += 1;
-            turnLabel.setText("Turn: " + turn);
-            board.endTurn();
-        }
     }
 }
