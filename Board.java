@@ -152,7 +152,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
         }        
         
         int selected = game.GetCity(tile);
-        if(selected == -1 || game.cities.get(selected).population <= 10 || game.cities.get(selected).materials < 40) // Wrong tile
+        if(selected == -1 || game.cities.get(selected).population <= 10 || game.cities.get(selected).materials < 40) // Invalid tile
         {
             buildsCity = false;
             app.toolbar.HideMessage();

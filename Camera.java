@@ -23,8 +23,8 @@ public class Camera
     public void changeScale(float multiplier, float x, float y)
     {
         float newScale = scale * multiplier;
-        pos.x += x / scale - x / newScale;
-        pos.y += y / scale - y / newScale;
+        pos.x += x / (int)scale - x / (int)newScale;
+        pos.y += y / (int)scale - y / (int)newScale;
         scale = newScale;
     }
 }
