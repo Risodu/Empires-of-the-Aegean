@@ -11,7 +11,7 @@ public class Game
     {
         noise = new NoiseGenerator(seed);
         Random random = new Random();
-        cities.add(new City(new Vector2(random.nextInt(10), random.nextInt(10))));
+        cities.add(new City(new Vector2(random.nextInt(10), random.nextInt(10)), this));
         // for(int i = 0; i < 10; i++)
         // {
         //     cities.add(new City(new Vector2(random.nextInt(10), random.nextInt(10))));

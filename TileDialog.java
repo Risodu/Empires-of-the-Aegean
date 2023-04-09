@@ -46,8 +46,8 @@ public class TileDialog extends JDialog implements ChangeListener
 
         if(city != null)
         {
-            farmersSlider = addSlider(0, city.population, city.farmers, "Farmers");
-            buildersSlider = addSlider(0, city.population, city.builders, "Builders");
+            farmersSlider = addSlider(0, Math.min(city.population, city.foodSource), city.farmers, "Farmers");
+            buildersSlider = addSlider(0, Math.min(city.population, city.materialSource), city.builders, "Builders");
         }
 
         updateText();

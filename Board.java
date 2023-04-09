@@ -176,7 +176,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
         try
         {
             ValidateNewCity(tile);
-            City building = new City(tile);
+            City building = new City(tile, game);
             City source = game.cities.get(buildsFrom);
             source.population -= 10;
             source.fixTasks();
