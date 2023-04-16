@@ -1,18 +1,22 @@
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-public class TileDialog extends JDialog implements ChangeListener
+public class TileDialog extends JDialog implements ChangeListener, ActionListener
 {
     private City city;
     private Vector2 tile;
@@ -52,11 +56,21 @@ public class TileDialog extends JDialog implements ChangeListener
             }
         }
 
+        JButton buildBakery = new JButton("Build bakery");
+        buildBakery.addActionListener(this);
+        add(buildBakery);
+
         updateText();
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    private void update()
+    {
+        updateText();
+        updateSliders();
     }
 
     private void updateText()
@@ -73,6 +87,17 @@ public class TileDialog extends JDialog implements ChangeListener
         
         mainText.setText(toHTML(text));
 
+    }
+
+    private void updateSliders()
+    {
+        for(int i = 0; i < jobSliders.length; i++)
+        {
+            jobSliders[i].setValue(city.jobs[i]);
+            int max = Math.min(city.population, city.maxJobs[i]);
+            jobSliders[i].slider.setMaximum(max);
+            jobSliders[i].slider.setMinorTickSpacing((int)Math.pow(10, Math.floor(Math.log10(max) - 0.5)));
+        }
     }
 
     private Slider addSlider(int min, int max, int value, int id, String name)
@@ -116,11 +141,21 @@ public class TileDialog extends JDialog implements ChangeListener
         JSlider source = (JSlider)e.getSource();
         city.jobs[Integer.parseInt(source.getName())] = source.getValue();
         city.fixJobs();
-        for(int i = 0; i < jobSliders.length; i++)
+        update();
+        owner.repaint();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if(city.materials < 10)
         {
-            jobSliders[i].setValue(city.jobs[i]);
+            JOptionPane.showMessageDialog(this, "You don't have enough materials (required: 10, current: " + city.materials + ")", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        updateText();
+        city.maxJobs[Jobs.baker.ordinal()] += 5;
+        city.materials -= 10;
+        update();
         owner.repaint();
     }
 

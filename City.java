@@ -2,7 +2,7 @@ public class City
 {
     public Vector2 position;
     public int population, materials, houses;
-    public int[] jobs = new int[2], maxJobs = new int[2];
+    public int[] jobs = new int[Jobs.values().length], maxJobs = new int[Jobs.values().length];
 
     public City(Vector2 pos, Game game)
     {
@@ -42,7 +42,10 @@ public class City
 
     public int getPopulationIncrease()
     {
-        float food = jobs[Jobs.farmer.ordinal()] - population * 0.2f;
+        int boosted = Math.min(jobs[Jobs.farmer.ordinal()], jobs[Jobs.baker.ordinal()] * 5);
+        System.out.println(boosted);
+        float food = jobs[Jobs.farmer.ordinal()] + boosted * 0.5f - population * 0.2f;
+        System.out.println(food);
         return Math.round(food > 0 ? food * 0.5f : food * 2);
     }
 
