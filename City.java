@@ -1,7 +1,8 @@
 public class City
 {
     public Vector2 position;
-    public int population, materials, houses, farmers, builders, foodSource, materialSource;
+    public int population, materials, houses;
+    public int[] jobs = new int[2], maxJobs = new int[2];
 
     public City(Vector2 pos, Game game)
     {
@@ -13,12 +14,10 @@ public class City
             for(int y = -1; y <= 1; y++)
             {
                 TerrainType type = game.GetTerrainAt(pos.x + x, pos.y + y);
-                foodSource += type.food;
-                materialSource += type.materials;
+                maxJobs[Jobs.farmer.ordinal()] += type.food * 5;
+                maxJobs[Jobs.builder.ordinal()] += type.materials * 5;
             }
         }
-        foodSource *= 5;
-        materialSource *= 5;
     }
 
     public void endTurn()
@@ -35,28 +34,32 @@ public class City
         }
 
         float multiplier = 1 + ((float)populationInc / population);
-        farmers *= multiplier;
-        builders *= multiplier;
+        jobs[Jobs.farmer.ordinal()] *= multiplier;
+        jobs[Jobs.builder.ordinal()] *= multiplier;
         population += populationInc;
-        fixTasks();
+        fixJobs();
     }
 
     public int getPopulationIncrease()
     {
-        float food = farmers - population * 0.2f;
+        float food = jobs[Jobs.farmer.ordinal()] - population * 0.2f;
         return Math.round(food > 0 ? food * 0.5f : food * 2);
     }
 
     public int getMaterialProduction()
     {
-        return builders;
+        return jobs[Jobs.builder.ordinal()];
     }
 
-    public void fixTasks()
+    public void fixJobs()
     {
-        int total = farmers + builders;
+        int total = 0;
+        for(int i = 0; i < jobs.length; i++)
+            total += jobs[i];
+        
         float ratio = total <= population ? 1 : (float)population / total;
-        farmers = Math.min((int)(farmers * ratio), foodSource);
-        builders = Math.min((int)(builders * ratio), materialSource);
+
+        for(int i = 0; i < jobs.length; i++)
+            jobs[i] = Math.min((int)(jobs[i] * ratio), maxJobs[i]);
     }
 }

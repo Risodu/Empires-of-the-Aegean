@@ -18,7 +18,7 @@ public class TileDialog extends JDialog implements ChangeListener
     private Vector2 tile;
     private Game game;
     private Window owner;
-    private Slider farmersSlider, buildersSlider;
+    private Slider[] jobSliders = new Slider[Jobs.values().length];
     private GridBagLayout layout;
     private JLabel mainText;
 
@@ -46,8 +46,10 @@ public class TileDialog extends JDialog implements ChangeListener
 
         if(city != null)
         {
-            farmersSlider = addSlider(0, Math.min(city.population, city.foodSource), city.farmers, "Farmers");
-            buildersSlider = addSlider(0, Math.min(city.population, city.materialSource), city.builders, "Builders");
+            for(int i = 0; i < city.jobs.length; i++)
+            {
+                jobSliders[i] = addSlider(0, Math.min(city.population, city.maxJobs[i]), city.jobs[i], i, Jobs.values()[i].getName());
+            }
         }
 
         updateText();
@@ -73,7 +75,7 @@ public class TileDialog extends JDialog implements ChangeListener
 
     }
 
-    private Slider addSlider(int min, int max, int value, String name)
+    private Slider addSlider(int min, int max, int value, int id, String name)
     {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
@@ -96,7 +98,7 @@ public class TileDialog extends JDialog implements ChangeListener
         add(valueLabel);
 
         s.addChangeListener(this);
-        s.setName(name);
+        s.setName(Integer.toString(id));
         s.setMinorTickSpacing((int)Math.pow(10, Math.floor(Math.log10(max) - 0.5)));
         s.setPaintTicks(true);
         // s.setSnapToTicks(true);
@@ -112,14 +114,12 @@ public class TileDialog extends JDialog implements ChangeListener
     public void stateChanged(ChangeEvent e)
     {
         JSlider source = (JSlider)e.getSource();
-        switch(source.getName())
+        city.jobs[Integer.parseInt(source.getName())] = source.getValue();
+        city.fixJobs();
+        for(int i = 0; i < jobSliders.length; i++)
         {
-            case "Farmers": city.farmers = source.getValue(); break;
-            case "Builders": city.builders = source.getValue(); break;
+            jobSliders[i].setValue(city.jobs[i]);
         }
-        city.fixTasks();
-        farmersSlider.setValue(city.farmers);
-        buildersSlider.setValue(city.builders);
         updateText();
         owner.repaint();
     }

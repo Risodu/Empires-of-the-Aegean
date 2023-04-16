@@ -179,7 +179,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
             City building = new City(tile, game);
             City source = game.cities.get(buildsFrom);
             source.population -= 10;
-            source.fixTasks();
+            source.fixJobs();
             source.materials -= 40;
             game.cities.add(building);
             repaint();
