@@ -1,9 +1,9 @@
 public enum Jobs
 {
-    farmer, builder, baker;
+    farmer, builder, baker, sawmill_worker, quarry_worker;
 
     public String getName()
     {
-        return name().substring(0, 1).toUpperCase().concat(name().substring(1)).concat("s"); // name.capitalize() + 's'
+        return name().substring(0, 1).toUpperCase().concat(name().substring(1).replace("_", " ")).concat("s"); // name.replace('_', ' ').capitalize() + 's'
     }
 }

@@ -52,11 +52,11 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
             {
                 jobSliders[i] = addSlider(0, Math.min(city.population, city.maxJobs[i]), city.jobs[i], i, Jobs.values()[i].getName());
             }
+            
+            addButton("Build bakery", "bakery");
+            addButton("Build sawmill", "sawmill");
+            addButton("Build quarry", "quarry");
         }
-
-        JButton buildBakery = new JButton("Build bakery");
-        buildBakery.addActionListener(this);
-        add(buildBakery);
 
         updateText();
 
@@ -126,6 +126,15 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
         return new Slider(nameLabel, valueLabel, s);
     }
 
+    private JButton addButton(String name, String command)
+    {
+        JButton button = new JButton(name);
+        button.addActionListener(this);
+        button.setActionCommand(command);
+        add(button);
+        return button;
+    }
+
     private String toHTML(String text)
     {
         return "<html>" + text.replace("\n", "<br>") + "</html>";
@@ -144,13 +153,19 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        if(city.materials < 10)
+        try
         {
-            JOptionPane.showMessageDialog(this, "You don't have enough materials (required: 10, current: " + city.materials + ")", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            switch(e.getActionCommand())
+            {
+                case "bakery": city.build(0); break;
+                case "sawmill": city.build(1); break;
+                case "quarry": city.build(2); break;
+            }
         }
-        city.maxJobs[Jobs.baker.ordinal()] += 5;
-        city.materials -= 10;
+        catch(GameError err)
+        {
+            JOptionPane.showMessageDialog(this, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
         update();
         owner.repaint();
     }

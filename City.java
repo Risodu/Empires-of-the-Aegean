@@ -1,7 +1,7 @@
 public class City
 {
     public Vector2 position;
-    public int population, materials, houses;
+    public int population, materials, houses, woodSource, stoneSource;
     public int[] jobs = new int[Jobs.values().length], maxJobs = new int[Jobs.values().length];
 
     public City(Vector2 pos, Game game)
@@ -16,6 +16,8 @@ public class City
                 TerrainType type = game.GetTerrainAt(pos.x + x, pos.y + y);
                 maxJobs[Jobs.farmer.ordinal()] += type.food * 5;
                 maxJobs[Jobs.builder.ordinal()] += type.materials * 5;
+                if(type == TerrainType.forest || type == TerrainType.hill) woodSource += type.materials * 5;
+                if(type == TerrainType.mountain) stoneSource += type.materials * 5;
             }
         }
     }
@@ -49,7 +51,9 @@ public class City
 
     public int getMaterialProduction()
     {
-        return jobs[Jobs.builder.ordinal()];
+        int boosted = Math.min(jobs[Jobs.sawmill_worker.ordinal()] * 5, woodSource) + Math.min(jobs[Jobs.quarry_worker.ordinal()] * 5, stoneSource);
+        boosted = Math.min(boosted, jobs[Jobs.builder.ordinal()]);
+        return jobs[Jobs.builder.ordinal()] + Math.round(boosted * 0.5f);
     }
 
     public void fixJobs()
@@ -62,5 +66,15 @@ public class City
 
         for(int i = 0; i < jobs.length; i++)
             jobs[i] = Math.min((int)(jobs[i] * ratio), maxJobs[i]);
+    }
+
+    public void build(int type) throws GameError
+    {
+        if(materials < 10)
+        {
+            throw new GameError("You don't have enough materials (required: 10, current: " + materials + ")");
+        }
+        maxJobs[Jobs.baker.ordinal() + type] += 5;
+        materials -= 10;
     }
 }

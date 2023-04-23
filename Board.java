@@ -145,7 +145,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
             buildsFrom = selected; // Selects city
             app.toolbar.ShowMessage("Select location of new city");
         }
-        catch(Exception err)
+        catch(GameError err)
         {
             buildsCity = false;
             app.toolbar.HideMessage();
@@ -153,12 +153,12 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
         }
     }
 
-    private void ValidateSourceCity(int selected) throws Exception
+    private void ValidateSourceCity(int selected) throws GameError
     {
-        if(selected == -1) throw new Exception("No city selected");
+        if(selected == -1) throw new GameError("No city selected");
         City city = game.cities.get(selected);
-        if(city.population <= 10) throw new Exception("City doesn't have enough population (required: 11, current: " + city.population + ")");
-        if(city.materials < 40) throw new Exception("City doesn't have enough materials (required: 40, current: " + city.materials + ")");
+        if(city.population <= 10) throw new GameError("City doesn't have enough population (required: 11, current: " + city.population + ")");
+        if(city.materials < 40) throw new GameError("City doesn't have enough materials (required: 40, current: " + city.materials + ")");
     }
 
     private void SelectNewCity(Vector2 tile)
@@ -176,16 +176,16 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
             game.cities.add(building);
             repaint();
         }
-        catch(Exception err)
+        catch(GameError err)
         {
             JOptionPane.showMessageDialog(app, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void ValidateNewCity(Vector2 tile) throws Exception
+    private void ValidateNewCity(Vector2 tile) throws GameError
     {
-        if(game.GetCity(tile) != -1) throw new Exception("City already present");
-        if(game.GetTerrainAt(tile) == TerrainType.sea) throw new Exception("Can't build city at water");
+        if(game.GetCity(tile) != -1) throw new GameError("City already present");
+        if(game.GetTerrainAt(tile) == TerrainType.sea) throw new GameError("Can't build city at water");
     }
 
     @Override
