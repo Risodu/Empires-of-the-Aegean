@@ -43,9 +43,7 @@ public class City
     public int getPopulationIncrease()
     {
         int boosted = Math.min(jobs[Jobs.farmer.ordinal()], jobs[Jobs.baker.ordinal()] * 5);
-        System.out.println(boosted);
         float food = jobs[Jobs.farmer.ordinal()] + boosted * 0.5f - population * 0.2f;
-        System.out.println(food);
         return Math.round(food > 0 ? food * 0.5f : food * 2);
     }
 

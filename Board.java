@@ -3,7 +3,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Ellipse2D;
@@ -45,13 +44,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
 
     void drawMap(Graphics g)
     {
-        // long time = System.currentTimeMillis();
         Graphics2D g2d = (Graphics2D)g;
-        // RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-
-        // rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
-        // g2d.setRenderingHints(rh);
 
         Rectangle2D rect = new Rectangle2D.Float();
         g2d.setStroke(new BasicStroke(10));
@@ -88,7 +81,6 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
             circle.setFrame(screenPoint.x, screenPoint.y, camera.scale * 0.6f, camera.scale * 0.6f);
             g2d.fill(circle);
         }
-        // System.out.println(System.currentTimeMillis() - time);
     }
 
     public void endTurn()

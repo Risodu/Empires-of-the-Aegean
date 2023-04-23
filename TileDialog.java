@@ -1,11 +1,9 @@
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -86,7 +84,6 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
         }
         
         mainText.setText(toHTML(text));
-
     }
 
     private void updateSliders()
@@ -126,7 +123,6 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
         s.setName(Integer.toString(id));
         s.setMinorTickSpacing((int)Math.pow(10, Math.floor(Math.log10(max) - 0.5)));
         s.setPaintTicks(true);
-        // s.setSnapToTicks(true);
         return new Slider(nameLabel, valueLabel, s);
     }
 
