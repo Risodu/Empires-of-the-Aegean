@@ -1,12 +1,11 @@
-public class City
+public class City extends Structure
 {
-    public Vector2 position;
     public int population, materials, houses, woodSource, stoneSource;
     public int[] jobs = new int[Jobs.values().length], maxJobs = new int[Jobs.values().length];
 
     public City(Vector2 pos, Game game)
     {
-        position = pos;
+        super(pos, StructureType.city);
         population = 10;
         houses = 10;
         for(int x = -1; x <= 1; x++)

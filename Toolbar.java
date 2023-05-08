@@ -14,9 +14,9 @@ public class Toolbar extends JPanel implements ActionListener
     {
         this.app = app;
         
-        buildButton = new JButton("New city");
+        buildButton = new JButton("Build");
         buildButton.addActionListener(this);
-        buildButton.setActionCommand("newCity");
+        buildButton.setActionCommand("build");
         add(buildButton);
 
         turnLabel = new JLabel("Turn: 1");
@@ -41,9 +41,8 @@ public class Toolbar extends JPanel implements ActionListener
                 app.board.endTurn();
                 turnLabel.setText("Turn: " + app.turn);
                 break;
-            case "newCity":
-                app.board.buildCity();
-                ShowMessage("Select city to build from");
+            case "build":
+                app.board.enterBuildMode();
                 break;
         }
     }

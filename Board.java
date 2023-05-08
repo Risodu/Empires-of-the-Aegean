@@ -11,17 +11,16 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JOptionPane;
-
 
 public class Board extends JPanel implements MouseMotionListener, MouseWheelListener, MouseListener
 {
     private Camera camera;
-    private int lastMouseX, lastMouseY, buildsFrom;
+    private int lastMouseX, lastMouseY;
     private Application app;
     private Game game;
-    private boolean buildsCity = false;
+    private boolean buildMode = false;
 
     public Board(float seed, Application app)
     {
@@ -89,10 +88,16 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
         repaint();
     }
 
-    public void buildCity()
+    public void enterBuildMode()
     {
-        buildsCity = true;
-        buildsFrom = -1;
+        buildMode = true;
+        new BuildDialog(app, game, camera);
+    }
+
+    public void exitBuildMode()
+    {
+        buildMode = false;
+        app.toolbar.HideMessage();
     }
 
     @Override
@@ -123,84 +128,24 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     @Override
     public void mouseClicked(MouseEvent e)
     {
+        if(buildMode) return; // Handled by BuildDialog
         Vector2 tile = camera.screenToWorld(e.getX(), e.getY());
-
-        if(!buildsCity) // Not building city
-        {
-            new TileDialog((Window)app, tile, game);
-            return;
-        }
-
-        if(buildsFrom == -1)
-            SelectSourceCity(game.GetCity(tile));
-        else
-            SelectNewCity(tile);
-    }
-
-    private void SelectSourceCity(int selected)
-    {
-        try
-        {
-            ValidateSourceCity(selected);
-            buildsFrom = selected; // Selects city
-            app.toolbar.ShowMessage("Select location of new city");
-        }
-        catch(GameError err)
-        {
-            buildsCity = false;
-            app.toolbar.HideMessage();
-            JOptionPane.showMessageDialog(app, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void ValidateSourceCity(int selected) throws GameError
-    {
-        if(selected == -1) throw new GameError("No city selected");
-        City city = game.cities.get(selected);
-        if(city.population <= 10) throw new GameError("City doesn't have enough population (required: 11, current: " + city.population + ")");
-        if(city.materials < 40) throw new GameError("City doesn't have enough materials (required: 40, current: " + city.materials + ")");
-    }
-
-    private void SelectNewCity(Vector2 tile)
-    {
-        app.toolbar.HideMessage();
-        buildsCity = false;
-        try
-        {
-            ValidateNewCity(tile);
-            City building = new City(tile, game);
-            City source = game.cities.get(buildsFrom);
-            source.population -= 10;
-            source.fixJobs();
-            source.materials -= 40;
-            game.cities.add(building);
-            repaint();
-        }
-        catch(GameError err)
-        {
-            JOptionPane.showMessageDialog(app, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void ValidateNewCity(Vector2 tile) throws GameError
-    {
-        if(game.GetCity(tile) != -1) throw new GameError("City already present");
-        if(game.GetTerrainAt(tile) == TerrainType.sea) throw new GameError("Can't build city at water");
+        new TileDialog((Window)app, tile, game);
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {        
+    public void mousePressed(MouseEvent e) {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {        
+    public void mouseReleased(MouseEvent e) {
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {        
+    public void mouseEntered(MouseEvent e) {
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {        
+    public void mouseExited(MouseEvent e) {
     }
 }
