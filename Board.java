@@ -70,6 +70,13 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
             }
         }
 
+        g2d.setColor(new Color(214, 156, 47));
+        for(int i = 0; i < game.roads.size(); i++)
+        {
+            Vector2 pos = game.roads.get(i).position;
+            drawRoad(pos, g2d);
+        }
+
         Ellipse2D circle = new Ellipse2D.Float();
         g2d.setColor(new Color(255, 170, 0));
         for(int i = 0; i < game.cities.size(); i++)
@@ -80,6 +87,30 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
             circle.setFrame(screenPoint.x, screenPoint.y, camera.scale * 0.6f, camera.scale * 0.6f);
             g2d.fill(circle);
         }
+    }
+
+    private void drawRoad(Vector2 pos, Graphics2D g2d)
+    {
+        float rw = 0.3f; // Road width
+        float ro = (1 - rw) * 0.5f; // Road offset
+
+        drawRoadSegment(g2d, pos, ro, ro, rw, rw);
+        if(game.RoadPresent(pos.add(Vector2.down)))
+            drawRoadSegment(g2d, pos, ro, ro, rw, rw + ro);
+        if(game.RoadPresent(pos.add(Vector2.up)))
+            drawRoadSegment(g2d, pos, ro, 0, rw, rw + ro);
+        if(game.RoadPresent(pos.add(Vector2.right)))
+            drawRoadSegment(g2d, pos, ro, ro, rw + ro, rw);
+        if(game.RoadPresent(pos.add(Vector2.left)))
+            drawRoadSegment(g2d, pos, 0, ro, rw + ro, rw);
+    }
+
+    private void drawRoadSegment(Graphics2D g2d, Vector2 road, float xoffset, float yoffset, float width, float height)
+    {
+        Rectangle2D rect = new Rectangle2D.Float();
+        Vector2 screenPoint = camera.worldToScreen(road.x + xoffset, road.y + yoffset);
+        rect.setFrame(screenPoint.x, screenPoint.y, camera.scale * width, camera.scale * height);
+        g2d.fill(rect);
     }
 
     public void endTurn()

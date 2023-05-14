@@ -131,6 +131,10 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
             {
                 game.cities.add((City)building);
             }
+            else if(newStructureType == StructureType.road)
+            {
+                game.roads.add(building);
+            }
             SelectSourceCity(buildsFrom);
             board.repaint();
         }
