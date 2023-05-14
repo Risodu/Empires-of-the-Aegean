@@ -108,8 +108,14 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
             app.toolbar.ShowMessage("Use build dialog to build structures");
             buildsFrom = selected; // Selects city
             City city = game.cities.get(selected);
+
             buildCity.setEnabled(city.materials >= 40 && city.population > 10);
+            if(!(city.materials >= 40 && city.population > 10) && newStructureType == StructureType.city)
+                newStructureType = null;
+
             buildRoad.setEnabled(city.materials >= 5);
+            if(!(city.materials >= 5) && newStructureType == StructureType.road)
+                newStructureType = null;
         }
         catch(GameError err)
         {
