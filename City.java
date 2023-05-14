@@ -19,6 +19,8 @@ public class City extends Structure
                 if(type == TerrainType.mountain) stoneSource += type.materials * 5;
             }
         }
+
+        game.roads.add(new Structure(pos, StructureType.road));
     }
 
     public void endTurn()

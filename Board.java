@@ -20,7 +20,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     private int lastMouseX, lastMouseY;
     private Application app;
     private Game game;
-    private boolean buildMode = false;
+    private boolean buildMode = false, roadDrawn;
 
     public Board(float seed, Application app)
     {
@@ -93,24 +93,43 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     {
         float rw = 0.3f; // Road width
         float ro = (1 - rw) * 0.5f; // Road offset
+        roadDrawn = false;
 
-        drawRoadSegment(g2d, pos, ro, ro, rw, rw);
         if(game.RoadPresent(pos.add(Vector2.down)))
-            drawRoadSegment(g2d, pos, ro, ro, rw, rw + ro);
+            drawRoadSegment(g2d, pos, ro, ro, rw, rw + ro, 0);
         if(game.RoadPresent(pos.add(Vector2.up)))
-            drawRoadSegment(g2d, pos, ro, 0, rw, rw + ro);
+            drawRoadSegment(g2d, pos, ro, 0, rw, rw + ro, 0);
         if(game.RoadPresent(pos.add(Vector2.right)))
-            drawRoadSegment(g2d, pos, ro, ro, rw + ro, rw);
+            drawRoadSegment(g2d, pos, ro, ro, rw + ro, rw, 0);
         if(game.RoadPresent(pos.add(Vector2.left)))
-            drawRoadSegment(g2d, pos, 0, ro, rw + ro, rw);
+            drawRoadSegment(g2d, pos, 0, ro, rw + ro, rw, 0);
+
+        float dw = rw * 1.4142135623730f; // Diagonal width
+        float dof = (1 - dw) * 0.5f; // Diagonal offset
+
+        if(game.RoadPresent(pos.add(new Vector2(1, 1))))
+            drawRoadSegment(g2d, pos, dof + dw * 0.5f, ro, 1, rw, 45);
+        if(game.RoadPresent(pos.add(new Vector2(-1, -1))))
+            drawRoadSegment(g2d, pos, dof + dw * 0.5f, ro, 1, rw, -135);
+        if(game.RoadPresent(pos.add(new Vector2(1, -1))))
+            drawRoadSegment(g2d, pos, dof + dw * 0.5f, ro, 1, rw, -45);
+        if(game.RoadPresent(pos.add(new Vector2(-1, 1))))
+            drawRoadSegment(g2d, pos, dof + dw * 0.5f, ro, 1, rw, 135);
+
+        if(!roadDrawn)
+            drawRoadSegment(g2d, pos, ro, ro, rw, rw, 0);
     }
 
-    private void drawRoadSegment(Graphics2D g2d, Vector2 road, float xoffset, float yoffset, float width, float height)
+    private void drawRoadSegment(Graphics2D g2d, Vector2 road, float xoffset, float yoffset, float width, float height, float angle)
     {
+        roadDrawn = true;
+        Vector2 center = camera.worldToScreen(road.x + 0.5f, road.y + 0.5f);
+        g2d.rotate(Math.toRadians(angle), center.x, center.y);
         Rectangle2D rect = new Rectangle2D.Float();
         Vector2 screenPoint = camera.worldToScreen(road.x + xoffset, road.y + yoffset);
         rect.setFrame(screenPoint.x, screenPoint.y, camera.scale * width, camera.scale * height);
         g2d.fill(rect);
+        g2d.rotate(Math.toRadians(-angle), center.x, center.y);
     }
 
     public void endTurn()
