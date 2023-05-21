@@ -13,7 +13,13 @@ public class Game
     {
         noise = new NoiseGenerator(seed);
         Random random = new Random();
-        cities.add(new City(new Vector2(random.nextInt(10), random.nextInt(10)), this));
+        for(int i = 0; i < 100; i++)
+        {
+            Vector2 position = new Vector2(random.nextInt(10) + i, random.nextInt(10) + i);
+            if(GetTerrainAt(position) == TerrainType.sea) continue;
+            cities.add(new City(position, this));
+            break;
+        }
     }
 
     public void endTurn()
