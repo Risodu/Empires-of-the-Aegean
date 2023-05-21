@@ -52,12 +52,35 @@ public class Game
         return -1;
     }
 
+    public int GetRoad(Vector2 pos)
+    {
+        for(int i = 0; i < roads.size(); i++)
+        {
+            if(roads.get(i).position.equals(pos))
+                return i;
+        }
+        return -1;
+    }
+
     public boolean RoadPresent(Vector2 pos)
     {
         for(int i = 0; i < roads.size(); i++)
         {
             if(roads.get(i).position.equals(pos))
                 return true;
+        }
+        return false;
+    }
+    
+    public boolean RoadNearby(Vector2 tile)
+    {
+        for(int i = -1; i < 2; i++)
+        {
+            for(int j = -1; j < 2; j++)
+            {
+                if(i == 0 && j == 0) continue;
+                if(RoadPresent(tile.add(new Vector2(i, j)))) return true;
+            }
         }
         return false;
     }

@@ -21,6 +21,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     private Application app;
     private Game game;
     private boolean buildMode = false, roadDrawn;
+    private BuildDialog buildDialog;
 
     public Board(float seed, Application app)
     {
@@ -66,6 +67,18 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
                 else
                 {
                     g2d.drawImage(terrain.image, (int)screenPoint.x, (int)screenPoint.y, (int)camera.scale, (int)camera.scale, null);
+                }
+
+                if(buildMode)
+                {
+                    try
+                    {
+                        buildDialog.ValidateNewStructure(new Vector2(i, j));
+                        rect.setFrame(screenPoint.x, screenPoint.y, camera.scale, camera.scale);
+                        g2d.setColor(new Color(0, 255, 0, 150));
+                        g2d.fill(rect);
+                    }
+                    catch(GameError e) {}
                 }
             }
         }
@@ -141,13 +154,15 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
     public void enterBuildMode()
     {
         buildMode = true;
-        new BuildDialog(app, game, camera);
+        buildDialog = new BuildDialog(app, game, camera);
+        repaint();
     }
 
     public void exitBuildMode()
     {
         buildMode = false;
         app.toolbar.HideMessage();
+        repaint();
     }
 
     @Override
