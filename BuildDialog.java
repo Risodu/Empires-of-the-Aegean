@@ -154,6 +154,20 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
     {
         if(game.GetCity(tile) != -1) throw new GameError("Structure already present");
         if(game.GetTerrainAt(tile) == TerrainType.sea) throw new GameError("Can't build structure at water");
+        if(!RoadNearby(tile)) throw new GameError("There is no road nearby");
+    }
+
+    private boolean RoadNearby(Vector2 tile)
+    {
+        for(int i = -1; i < 2; i++)
+        {
+            for(int j = -1; j < 2; j++)
+            {
+                if(i == 0 && j == 0) continue;
+                if(game.RoadPresent(tile.add(new Vector2(i, j)))) return true;
+            }
+        }
+        return false;
     }
     
     @Override
