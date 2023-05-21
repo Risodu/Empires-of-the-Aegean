@@ -2,6 +2,7 @@ public class City extends Structure
 {
     public int population, materials, houses, woodSource, stoneSource;
     public int[] jobs = new int[Jobs.values().length], maxJobs = new int[Jobs.values().length];
+    public Game game;
 
     public City(Vector2 pos, Game game)
     {
@@ -15,12 +16,14 @@ public class City extends Structure
                 TerrainType type = game.GetTerrainAt(pos.x + x, pos.y + y);
                 maxJobs[Jobs.farmer.ordinal()] += type.food * 5;
                 maxJobs[Jobs.builder.ordinal()] += type.materials * 5;
+                maxJobs[Jobs.scientist.ordinal()] += type.culture * 5;
                 if(type == TerrainType.forest || type == TerrainType.hill) woodSource += type.materials * 5;
                 if(type == TerrainType.mountain) stoneSource += type.materials * 5;
             }
         }
 
         game.roads.add(new Structure(pos, StructureType.road));
+        this.game = game;
     }
 
     public void endTurn()
@@ -37,8 +40,10 @@ public class City extends Structure
         }
 
         float multiplier = 1 + ((float)populationInc / population);
-        jobs[Jobs.farmer.ordinal()] *= multiplier;
-        jobs[Jobs.builder.ordinal()] *= multiplier;
+        for(int i = 0; i < jobs.length; i++)
+        {
+            jobs[i] *= multiplier;            
+        }
         population += populationInc;
         fixJobs();
     }
@@ -55,6 +60,11 @@ public class City extends Structure
         int boosted = Math.min(jobs[Jobs.sawmill_worker.ordinal()] * 5, woodSource) + Math.min(jobs[Jobs.quarry_worker.ordinal()] * 5, stoneSource);
         boosted = Math.min(boosted, jobs[Jobs.builder.ordinal()]);
         return jobs[Jobs.builder.ordinal()] + Math.round(boosted * 0.5f);
+    }
+
+    public int getCultureIncrease()
+    {
+        return jobs[Jobs.scientist.ordinal()];
     }
 
     public void fixJobs()

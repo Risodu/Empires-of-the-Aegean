@@ -7,6 +7,7 @@ public class Game
     private NoiseGenerator noise;
     public List<City> cities = new ArrayList<City>();
     public List<Structure> roads = new ArrayList<Structure>();
+    public int culture;
 
     public Game(float seed)
     {
@@ -17,6 +18,7 @@ public class Game
 
     public void endTurn()
     {
+        culture += getCultureIncrease();
         for(int i = 0; i < cities.size(); i++)
         {
             City city = cities.get(i);
@@ -83,5 +85,15 @@ public class Game
             }
         }
         return false;
+    }
+
+    public int getCultureIncrease()
+    {
+        int total = 0;
+        for(int i = 0; i < cities.size(); i++)
+        {
+            total += cities.get(i).getCultureIncrease();
+        }
+        return total;
     }
 }

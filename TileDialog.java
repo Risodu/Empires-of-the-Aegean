@@ -80,6 +80,7 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
             text += "\nThere is a city on this tile";
             text += String.format("\nPopulation: %d (%+d)", city.population, city.getPopulationIncrease());
             text += String.format("\nMaterials: %d (%+d)", city.materials, city.getMaterialProduction());
+            text += String.format("\nCulture (shared): %d (%+d)", game.culture, game.getCultureIncrease());
             text += "\nHouses: " + city.houses;
         }
         

@@ -1,6 +1,6 @@
 public enum Jobs
 {
-    farmer, builder, baker, sawmill_worker, quarry_worker;
+    farmer, builder, scientist, baker, sawmill_worker, quarry_worker;
 
     public String getName()
     {
