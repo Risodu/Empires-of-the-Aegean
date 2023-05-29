@@ -7,29 +7,33 @@ import java.awt.event.ActionEvent;
 public class Toolbar extends JPanel implements ActionListener
 {
     JLabel turnLabel, messageLabel;
-    JButton endTurnButton, buildButton;
+    JButton endTurnButton, buildButton, researchButton;
     Application app;
     
     public Toolbar(Application app)
     {
         this.app = app;
         
-        buildButton = new JButton("Build");
-        buildButton.addActionListener(this);
-        buildButton.setActionCommand("build");
-        add(buildButton);
+        buildButton = createButton("Build", "build");
+        researchButton = createButton("Research", "research");
 
         turnLabel = new JLabel("Turn: 1");
         add(turnLabel);
 
-        endTurnButton = new JButton("End turn");
-        endTurnButton.addActionListener(this);
-        endTurnButton.setActionCommand("endTurn");
-        add(endTurnButton);
+        endTurnButton = createButton("End turn", "endTurn");
         
         messageLabel = new JLabel("Turn: 1");
         messageLabel.setVisible(false);
         add(messageLabel);
+    }
+
+    private JButton createButton(String label, String command)
+    {
+        JButton button = new JButton(label);
+        button.addActionListener(this);
+        button.setActionCommand(command);
+        add(button);
+        return button;
     }
     
     public void actionPerformed(ActionEvent e)
@@ -61,6 +65,7 @@ public class Toolbar extends JPanel implements ActionListener
     private void setDisplayingMessage(boolean value)
     {
         buildButton.setVisible(!value);
+        researchButton.setVisible(!value);
         turnLabel.setVisible(!value);
         endTurnButton.setVisible(!value);
         messageLabel.setVisible(value);
