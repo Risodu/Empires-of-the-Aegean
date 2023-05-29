@@ -1,0 +1,18 @@
+[
+    {
+        "displayName": "Agriculture",
+        "description": "Improve farming methods.\nEffect: +5 farmers per field",
+        "cost": 10,
+        "x": 0,
+        "y": 0,
+        "parent": -1
+    },
+    {
+        "displayName": "Baking",
+        "description": "Process raw wheat into bread.\nEffect: unlocks bakery",
+        "cost": 10,
+        "x": 1,
+        "y": 0,
+        "parent": 0
+    }
+]

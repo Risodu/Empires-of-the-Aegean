@@ -33,6 +33,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
         setPreferredSize(new Dimension(500, 500));
         this.app = app;
         game = new Game(seed);
+        new TechTree("technologies.json");
     }
 
     @Override
