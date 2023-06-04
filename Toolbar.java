@@ -48,6 +48,9 @@ public class Toolbar extends JPanel implements ActionListener
             case "build":
                 app.board.enterBuildMode();
                 break;
+            case "research":
+                app.board.openResearchDialog();
+                break;
         }
     }
 

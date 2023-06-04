@@ -8,6 +8,7 @@ public class Game
     public List<City> cities = new ArrayList<City>();
     public List<Structure> roads = new ArrayList<Structure>();
     public int culture;
+    public TechTree techTree;
 
     public Game(float seed)
     {
@@ -20,6 +21,7 @@ public class Game
             cities.add(new City(position, this));
             break;
         }
+        techTree = new TechTree("technologies.json");
     }
 
     public void endTurn()
