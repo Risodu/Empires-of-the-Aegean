@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Window;
@@ -47,6 +48,8 @@ public class ResearchDialog extends JDialog implements ActionListener
             Technology tech = techTree.technologies[i];
             buttons[i] = new JButton(tech.displayName);
             buttons[i].setToolTipText("<html>" + tech.description + "<br>Cost: " + Integer.toString(tech.cost) + "</html>");
+            buttons[i].setActionCommand(Integer.toString(i));
+            buttons[i].addActionListener(this);
 
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = tech.x;
@@ -57,12 +60,28 @@ public class ResearchDialog extends JDialog implements ActionListener
         }
         
         pack();
+        update();
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    public void update()
+    {
+        for(int i = 0; i < buttons.length; i++)
+        {
+            Technology tech = techTree.technologies[i];
+            if(tech.researched)
+                buttons[i].setBackground(new Color(0, 255, 0, 255));
+            else
+                buttons[i].setEnabled(tech.parent == null || tech.parent.researched);
+        }
     }
     
     @Override
     public void actionPerformed(ActionEvent e)
     {
+        int index = Integer.parseInt(e.getActionCommand());
+        techTree.technologies[index].researched = true;
+        update();
     }
 }
