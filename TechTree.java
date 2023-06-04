@@ -39,6 +39,7 @@ public class TechTree
                 current.getInt("cost"),
                 current.getInt("x"),
                 current.getInt("y"),
+                parentIndex,
                 parent
             );
         }
