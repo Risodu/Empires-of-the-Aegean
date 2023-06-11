@@ -1,6 +1,6 @@
 public class City extends Structure
 {
-    public int population, materials, houses, woodSource, stoneSource;
+    public int population, materials, houses, fieldCount, woodSource, stoneSource;
     public int[] jobs = new int[Jobs.values().length], maxJobs = new int[Jobs.values().length];
     public Game game;
 
@@ -17,6 +17,11 @@ public class City extends Structure
                 maxJobs[Jobs.farmer.ordinal()] += type.food * 5;
                 maxJobs[Jobs.builder.ordinal()] += type.materials * 5;
                 maxJobs[Jobs.scientist.ordinal()] += type.culture * 5;
+                if(type == TerrainType.plain)
+                {
+                    fieldCount += 1;
+                    maxJobs[Jobs.farmer.ordinal()] += game.techTree.getFieldBonus();
+                }
                 if(type == TerrainType.forest || type == TerrainType.hill) woodSource += type.materials * 5;
                 if(type == TerrainType.mountain) stoneSource += type.materials * 5;
             }
@@ -33,10 +38,11 @@ public class City extends Structure
         
         if(population + populationInc > houses)
         {
-            int builded = Math.min(population + populationInc - houses, materials / 2);
+            int cost = game.techTree.getHouseCost();
+            int builded = Math.min(population + populationInc - houses, materials / cost);
             houses += builded;
             populationInc = Math.min(population + populationInc, houses) - population;
-            materials -= builded * 2;
+            materials -= builded * cost;
         }
 
         float multiplier = 1 + ((float)populationInc / population);

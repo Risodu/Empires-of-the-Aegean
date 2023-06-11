@@ -12,6 +12,7 @@ public class Game
 
     public Game(float seed)
     {
+        techTree = new TechTree("technologies.json", this);
         noise = new NoiseGenerator(seed);
         Random random = new Random();
         for(int i = 0; i < 100; i++)
@@ -21,7 +22,6 @@ public class Game
             cities.add(new City(position, this));
             break;
         }
-        techTree = new TechTree("technologies.json");
     }
 
     public void endTurn()

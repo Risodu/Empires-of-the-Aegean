@@ -7,9 +7,11 @@ import org.json.JSONArray;
 public class TechTree
 {
     public Technology[] technologies;
+    private Game game;
 
-    public TechTree(String path)
+    public TechTree(String path, Game game)
     {
+        this.game = game;
         String data=null;
         try
         {
@@ -44,4 +46,32 @@ public class TechTree
             );
         }
     }
+
+    public void research(int index)
+    {
+        technologies[index].researched = true;
+        switch(index)
+        {
+            case 0:
+                for(int i = 0; i < game.cities.size(); i++)
+                {
+                    City c = game.cities.get(i);
+                    c.maxJobs[Jobs.farmer.ordinal()] += 5 * c.fieldCount;
+                }
+        }
+    }
+
+    public int getFieldBonus()
+    {
+        return technologies[0].researched ? 5 : 0;
+    }
+
+    public int getHouseCost()
+    {
+        return technologies[1].researched ? 2 : 3;
+    }
+
+    public boolean bakeryUnlocked(){return technologies[2].researched;}
+    public boolean sawmillUnlocked(){return technologies[3].researched;}
+    public boolean quarryUnlocked(){return technologies[4].researched;}
 }

@@ -53,9 +53,9 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
                 jobSliders[i] = addSlider(0, Math.min(city.population, city.maxJobs[i]), city.jobs[i], i, Jobs.values()[i].getName());
             }
             
-            addButton("Build bakery", "bakery");
-            addButton("Build sawmill", "sawmill");
-            addButton("Build quarry", "quarry");
+            addButton("Build bakery", "bakery").setEnabled(game.techTree.bakeryUnlocked());
+            addButton("Build sawmill", "sawmill").setEnabled(game.techTree.sawmillUnlocked());
+            addButton("Build quarry", "quarry").setEnabled(game.techTree.quarryUnlocked());
         }
 
         updateText();

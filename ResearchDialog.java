@@ -83,7 +83,7 @@ public class ResearchDialog extends JDialog implements ActionListener
         int index = Integer.parseInt(e.getActionCommand());
         Technology tech = techTree.technologies[index];
         if(game.culture < tech.cost) return;
-        tech.researched = true;
+        techTree.research(index);
         game.culture -= tech.cost;
         update();
     }
