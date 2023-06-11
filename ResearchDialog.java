@@ -73,7 +73,7 @@ public class ResearchDialog extends JDialog implements ActionListener
             if(tech.researched)
                 buttons[i].setBackground(new Color(0, 255, 0, 255));
             else
-                buttons[i].setEnabled(tech.parent == null || tech.parent.researched);
+                buttons[i].setEnabled((tech.parent == null || tech.parent.researched) && game.culture >= tech.cost);
         }
     }
     
@@ -81,7 +81,10 @@ public class ResearchDialog extends JDialog implements ActionListener
     public void actionPerformed(ActionEvent e)
     {
         int index = Integer.parseInt(e.getActionCommand());
-        techTree.technologies[index].researched = true;
+        Technology tech = techTree.technologies[index];
+        if(game.culture < tech.cost) return;
+        tech.researched = true;
+        game.culture -= tech.cost;
         update();
     }
 }
