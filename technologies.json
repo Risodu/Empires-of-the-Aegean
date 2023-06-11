@@ -8,11 +8,35 @@
         "parent": -1
     },
     {
+        "displayName": "Building",
+        "description": "Improve building methods\nEffect: Decrease house cost",
+        "cost": 10,
+        "x": 0,
+        "y": 1,
+        "parent": -1
+    },
+    {
         "displayName": "Baking",
         "description": "Process raw wheat into bread.\nEffect: unlocks bakery",
         "cost": 10,
         "x": 1,
         "y": 0,
-        "parent": 0
+        "parent": 1
+    },
+    {
+        "displayName": "Wood processing",
+        "description": "Process raw wood into more useful planks.\nEffect: unlocks sawmill",
+        "cost": 10,
+        "x": 1,
+        "y": 1,
+        "parent": 1
+    },
+    {
+        "displayName": "Mining",
+        "description": "Mine stone from mountains to be used as building material.\nEffect: unlocks quarry",
+        "cost": 10,
+        "x": 1,
+        "y": 2,
+        "parent": 1
     }
 ]
