@@ -53,17 +53,8 @@ public class TechTree
         switch(index)
         {
             case 0:
-                for(int i = 0; i < game.cities.size(); i++)
-                {
-                    City c = game.cities.get(i);
-                    c.maxJobs[Jobs.farmer.ordinal()] += 5 * c.fieldCount;
-                }
+                TerrainType.plain.capacity += 5;
         }
-    }
-
-    public int getFieldBonus()
-    {
-        return technologies[0].researched ? 5 : 0;
     }
 
     public int getHouseCost()

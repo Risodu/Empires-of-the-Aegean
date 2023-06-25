@@ -9,22 +9,16 @@ public class TerrainType
     public String displayName;
     public Color color;
     public BufferedImage image;
-    public int food, materials, culture; 
+    public int food, materials, culture, capacity; 
     public static TerrainType 
-    sea = new TerrainType("sea", "sea.png", 2, 0, 0), 
-    shore = new TerrainType("shore", "shore.png", 1, 0, 2), 
-    plain = new TerrainType("plain", "plain.png", 4, 0, 0), 
-    forest = new TerrainType("forest", "forest2.png", 2, 2, 1), 
-    hill = new TerrainType("hill", "hill.png", 1, 2, 2), 
-    mountain = new TerrainType("mountain", "mountain.png", 0, 4, 0);
+    sea = new TerrainType("sea", "sea.png", 2, 0, 0, 10), 
+    shore = new TerrainType("shore", "shore.png", 1, 0, 2, 10), 
+    plain = new TerrainType("plain", "plain.png", 4, 0, 0, 10), 
+    forest = new TerrainType("forest", "forest2.png", 2, 2, 1, 10), 
+    hill = new TerrainType("hill", "hill.png", 1, 2, 2, 10), 
+    mountain = new TerrainType("mountain", "mountain.png", 0, 4, 0, 10);
 
-    public TerrainType(String name, Color color)
-    {
-        displayName = name;
-        this.color = color;
-    }
-
-    public TerrainType(String name, String imagePath, int food, int materials, int culture)
+    public TerrainType(String name, String imagePath, int food, int materials, int culture, int capacity)
     {
         displayName = name;
         try
@@ -39,6 +33,7 @@ public class TerrainType
         this.food = food;
         this.materials = materials;
         this.culture = culture;
+        this.capacity = capacity;
     }
 
     // Arguments between 0 and 1

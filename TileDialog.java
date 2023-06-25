@@ -1,6 +1,7 @@
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
@@ -8,10 +9,14 @@ import javax.swing.JButton;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 
 public class TileDialog extends JDialog implements ChangeListener, ActionListener
@@ -21,8 +26,11 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
     private Game game;
     private Window owner;
     private Slider[] jobSliders = new Slider[Jobs.values().length];
+    private JSlider[] tileSliders = new JSlider[9];
     private GridBagLayout layout;
     private JLabel mainText;
+    private JPanel surroundings;
+    private static final int tileSize = 96;
 
     public TileDialog(Window owner, Vector2 tile, Game game)
     {
@@ -56,6 +64,34 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
             addButton("Build bakery", "bakery").setEnabled(game.techTree.bakeryUnlocked());
             addButton("Build sawmill", "sawmill").setEnabled(game.techTree.sawmillUnlocked());
             addButton("Build quarry", "quarry").setEnabled(game.techTree.quarryUnlocked());
+
+            surroundings = new JPanel(new GridLayout(3, 3, 0, 0))
+            {
+                protected void paintComponent(Graphics g)
+                {
+                    super.paintComponent(g);
+                    for(int i = 0; i < 3; i++)
+                    {
+                        for(int j = 0; j < 3; j++)
+                        {
+                            TerrainType current = game.GetTerrainAt(i + tile.x - 1, j + tile.y - 1);
+                            g.drawImage(current.image, tileSize * i, tileSize * j, tileSize, tileSize, null);
+                        }
+                    }
+                }
+            };
+            surroundings.setPreferredSize(new Dimension(tileSize * 3, tileSize * 3));
+
+            for(int i = 0; i < 9; i++)
+            {
+                addTileSlider(i);
+            }
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = GridBagConstraints.RELATIVE;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            layout.setConstraints(surroundings, c);
+            add(surroundings);
         }
 
         updateText();
@@ -96,6 +132,11 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
             jobSliders[i].slider.setMaximum(max);
             jobSliders[i].slider.setMinorTickSpacing((int)Math.pow(10, Math.floor(Math.log10(max) - 0.5)));
         }
+
+        for(int i = 0; i < tileSliders.length; i++)
+        {
+            tileSliders[i].setValue(city.tileJobs[i]);
+        }
     }
 
     private Slider addSlider(int min, int max, int value, int id, String name)
@@ -134,6 +175,41 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
         button.setActionCommand(command);
         add(button);
         return button;
+    }
+    
+    private void addTileSlider(int i)
+    {
+        JPanel p = new JPanel();
+        p.setOpaque(false);
+        p.setMaximumSize(new Dimension(tileSize, tileSize));
+
+        JSlider s = new JSlider(0, city.surroundings[i].capacity, city.tileJobs[i]);
+        s.setOpaque(false);
+        s.setName(Integer.toString(i));
+        s.setPreferredSize(new Dimension(tileSize, s.getPreferredSize().height));
+        tileSliders[i] = s;
+
+        JLabel l = new JLabel(' ' + Integer.toString(city.tileJobs[i]) + ' ');
+        l.setBackground(Color.white);
+        l.setOpaque(true);
+
+        s.addChangeListener(new ChangeListener()
+        {
+            @Override
+            public void stateChanged(ChangeEvent e)
+            {
+                JSlider source = (JSlider)e.getSource();
+                city.tileJobs[Integer.parseInt(source.getName())] = source.getValue();
+                city.fixJobs();
+                l.setText(' ' + Integer.toString(source.getValue()) + ' ');
+                update();
+                owner.repaint();
+            }
+        });
+
+        p.add(s);
+        p.add(l);
+        surroundings.add(p);
     }
 
     private String toHTML(String text)

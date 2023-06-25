@@ -1,7 +1,8 @@
 public class City extends Structure
 {
-    public int population, materials, houses, fieldCount, woodSource, stoneSource;
-    public int[] jobs = new int[Jobs.values().length], maxJobs = new int[Jobs.values().length];
+    public int population, materials, houses, woodSource, stoneSource;
+    public int[] jobs = new int[Jobs.values().length], maxJobs = new int[Jobs.values().length], tileJobs = new int[9];
+    public TerrainType[] surroundings = new TerrainType[9];
     public Game game;
 
     public City(Vector2 pos, Game game)
@@ -9,21 +10,12 @@ public class City extends Structure
         super(pos, StructureType.city);
         population = 10;
         houses = 10;
-        for(int x = -1; x <= 1; x++)
+        for(int x = 0; x < 3; x++)
         {
-            for(int y = -1; y <= 1; y++)
+            for(int y = 0; y < 3; y++)
             {
-                TerrainType type = game.GetTerrainAt(pos.x + x, pos.y + y);
-                maxJobs[Jobs.farmer.ordinal()] += type.food * 5;
-                maxJobs[Jobs.builder.ordinal()] += type.materials * 5;
-                maxJobs[Jobs.scientist.ordinal()] += type.culture * 5;
-                if(type == TerrainType.plain)
-                {
-                    fieldCount += 1;
-                    maxJobs[Jobs.farmer.ordinal()] += game.techTree.getFieldBonus();
-                }
-                if(type == TerrainType.forest || type == TerrainType.hill) woodSource += type.materials * 5;
-                if(type == TerrainType.mountain) stoneSource += type.materials * 5;
+                TerrainType current = game.GetTerrainAt(x + pos.x - 1, y + pos.y - 1);
+                surroundings[y * 3 + x] = current;
             }
         }
 
@@ -56,21 +48,47 @@ public class City extends Structure
 
     public int getPopulationIncrease()
     {
-        int boosted = Math.min(jobs[Jobs.farmer.ordinal()], jobs[Jobs.baker.ordinal()] * 5);
-        float food = jobs[Jobs.farmer.ordinal()] + boosted * 0.5f - population * 0.2f;
+        int rawFood = 0;
+        for(int i = 0; i < 9; i++)
+        {
+            rawFood += surroundings[i].food * tileJobs[i];
+        }
+        rawFood >>= 1;
+        int boosted = Math.min(rawFood, jobs[Jobs.baker.ordinal()] * 5);
+        float food = rawFood + boosted * 0.5f - population * 0.2f;
         return Math.round(food > 0 ? food * 0.5f : food * 2);
     }
 
     public int getMaterialProduction()
     {
-        int boosted = Math.min(jobs[Jobs.sawmill_worker.ordinal()] * 5, woodSource) + Math.min(jobs[Jobs.quarry_worker.ordinal()] * 5, stoneSource);
-        boosted = Math.min(boosted, jobs[Jobs.builder.ordinal()]);
-        return jobs[Jobs.builder.ordinal()] + Math.round(boosted * 0.5f);
+        int wood = 0, stone = 0, materials = 0;
+        for(int i = 0; i < 9; i++)
+        {
+            int current = surroundings[i].materials * tileJobs[i];
+            switch(surroundings[i].displayName)
+            {
+                case "forest": 
+                    wood += current; 
+                    break;
+                case "hill":
+                case "mountain":
+                    stone += current;
+                    break;
+            }
+            materials += current;
+        }
+        int boosted = Math.min(jobs[Jobs.sawmill_worker.ordinal()] * 5, wood) + Math.min(jobs[Jobs.quarry_worker.ordinal()] * 5, stone);
+        return (materials + Math.round(boosted * 0.5f)) >> 1;
     }
 
     public int getCultureIncrease()
     {
-        return jobs[Jobs.scientist.ordinal()];
+        int culture = 0;
+        for(int i = 0; i < 9; i++)
+        {
+            culture += surroundings[i].culture * tileJobs[i];
+        }
+        return culture >> 1;
     }
 
     public void fixJobs()
@@ -78,11 +96,17 @@ public class City extends Structure
         int total = 0;
         for(int i = 0; i < jobs.length; i++)
             total += jobs[i];
+
+        for(int i = 0; i < tileJobs.length; i++)
+            total += tileJobs[i];
         
         float ratio = total <= population ? 1 : (float)population / total;
 
         for(int i = 0; i < jobs.length; i++)
             jobs[i] = Math.min((int)(jobs[i] * ratio), maxJobs[i]);
+
+        for(int i = 0; i < tileJobs.length; i++)
+            tileJobs[i] = (int)(tileJobs[i] * ratio);
     }
 
     public void build(int type) throws GameError
