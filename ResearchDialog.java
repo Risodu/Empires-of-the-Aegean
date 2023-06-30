@@ -33,10 +33,12 @@ public class ResearchDialog extends JDialog implements ActionListener
                 for(int i = 0; i < techTree.technologies.length; i++)
                 {
                     Technology tech = techTree.technologies[i];
-                    if(tech.parent == null) continue;
                     Component a = this.getComponent(i);
-                    Component b = this.getComponent(tech.parentIndex);
-                    g.drawLine(a.getX() + a.getWidth() / 2, a.getY() + a.getHeight() / 2, b.getX() + b.getWidth() / 2, b.getY() + b.getHeight() / 2);
+                    for(int j = 0; j < tech.prerequisites.length; j++)
+                    {
+                        Component b = this.getComponent(tech.prerequisiteIndices[j]);
+                        g.drawLine(a.getX() + a.getWidth() / 2, a.getY() + a.getHeight() / 2, b.getX() + b.getWidth() / 2, b.getY() + b.getHeight() / 2);
+                    }
                 }
             }
         };
@@ -73,7 +75,7 @@ public class ResearchDialog extends JDialog implements ActionListener
             if(tech.researched)
                 buttons[i].setBackground(new Color(0, 255, 0, 255));
             else
-                buttons[i].setEnabled((tech.parent == null || tech.parent.researched) && game.culture >= tech.cost);
+                buttons[i].setEnabled(techTree.hasPrerequisites(i) && game.culture >= tech.cost);
         }
     }
     

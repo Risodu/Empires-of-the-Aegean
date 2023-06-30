@@ -5,7 +5,7 @@
         "cost": 10,
         "x": 0,
         "y": 0,
-        "parent": -1
+        "prerequisites": []
     },
     {
         "displayName": "Building",
@@ -13,7 +13,7 @@
         "cost": 10,
         "x": 0,
         "y": 1,
-        "parent": -1
+        "prerequisites": []
     },
     {
         "displayName": "Baking",
@@ -21,7 +21,7 @@
         "cost": 10,
         "x": 1,
         "y": 0,
-        "parent": 1
+        "prerequisites": [0, 1]
     },
     {
         "displayName": "Wood processing",
@@ -29,7 +29,7 @@
         "cost": 10,
         "x": 1,
         "y": 1,
-        "parent": 1
+        "prerequisites": [1]
     },
     {
         "displayName": "Mining",
@@ -37,6 +37,6 @@
         "cost": 10,
         "x": 1,
         "y": 2,
-        "parent": 1
+        "prerequisites": [1]
     }
 ]

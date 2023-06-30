@@ -33,18 +33,37 @@ public class TechTree
         for(int i = 0; i < array.length(); i++)
         {
             JSONObject current = array.getJSONObject(i);
-            int parentIndex = current.getInt("parent");
-            Technology parent = parentIndex == -1 ? null : technologies[parentIndex];
+
+            JSONArray prerequsiteArray = current.getJSONArray("prerequisites");
+            int[] prerequisiteIndices = new int[prerequsiteArray.length()];
+            Technology[] prerequisites = new Technology[prerequsiteArray.length()];
+            for(int j = 0; j < prerequsiteArray.length(); j++)
+            {
+                int index = prerequsiteArray.getInt(j);
+                prerequisiteIndices[j] = index;
+                prerequisites[j] = technologies[index];
+            }
+
             technologies[i] = new Technology(
                 current.getString("displayName"),
                 current.getString("description"),
                 current.getInt("cost"),
                 current.getInt("x"),
                 current.getInt("y"),
-                parentIndex,
-                parent
+                prerequisiteIndices,
+                prerequisites
             );
         }
+    }
+
+    public boolean hasPrerequisites(int index)
+    {
+        Technology[] req = technologies[index].prerequisites;
+        for(int i = 0; i < req.length; i++)
+        {
+            if(!req[i].researched) return false;
+        }
+        return true;
     }
 
     public void research(int index)
