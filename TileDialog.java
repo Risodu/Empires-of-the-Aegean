@@ -25,8 +25,7 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
     private Vector2 tile;
     private Game game;
     private Window owner;
-    private Slider[] jobSliders = new Slider[Jobs.values().length];
-    private JSlider[] tileSliders = new JSlider[9];
+    private Slider[] jobSliders = new Slider[Jobs.values().length], tileSliders = new Slider[9];
     private GridBagLayout layout;
     private JLabel mainText;
     private JPanel surroundings;
@@ -58,7 +57,7 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
         {
             for(int i = 0; i < city.jobs.length; i++)
             {
-                jobSliders[i] = addSlider(0, Math.min(city.population, city.maxJobs[i]), city.jobs[i], i, Jobs.values()[i].getName());
+                jobSliders[i] = addSlider(0, 100, city.jobWeights[i], i, Jobs.values()[i].getName());
             }
             
             addButton("Build bakery", "bakery").setEnabled(game.techTree.bakeryUnlocked());
@@ -128,9 +127,6 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
         for(int i = 0; i < jobSliders.length; i++)
         {
             jobSliders[i].setValue(city.jobs[i]);
-            int max = Math.min(city.population, city.maxJobs[i]);
-            jobSliders[i].slider.setMaximum(max);
-            jobSliders[i].slider.setMinorTickSpacing((int)Math.pow(10, Math.floor(Math.log10(max) - 0.5)));
         }
 
         for(int i = 0; i < tileSliders.length; i++)
@@ -165,7 +161,7 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
         s.setName(Integer.toString(id));
         s.setMinorTickSpacing((int)Math.pow(10, Math.floor(Math.log10(max) - 0.5)));
         s.setPaintTicks(true);
-        return new Slider(nameLabel, valueLabel, s);
+        return new Slider(nameLabel, valueLabel, s, false);
     }
 
     private JButton addButton(String name, String command)
@@ -183,15 +179,15 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
         p.setOpaque(false);
         p.setMaximumSize(new Dimension(tileSize, tileSize));
 
-        JSlider s = new JSlider(0, city.surroundings[i].capacity, city.tileJobs[i]);
+        JSlider s = new JSlider(0, 100, city.tileJobWeights[i]);
         s.setOpaque(false);
         s.setName(Integer.toString(i));
         s.setPreferredSize(new Dimension(tileSize, s.getPreferredSize().height));
-        tileSliders[i] = s;
 
         JLabel l = new JLabel(' ' + Integer.toString(city.tileJobs[i]) + ' ');
         l.setBackground(Color.white);
         l.setOpaque(true);
+        tileSliders[i] = new Slider(null, l, s, true);
 
         s.addChangeListener(new ChangeListener()
         {
@@ -199,9 +195,9 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
             public void stateChanged(ChangeEvent e)
             {
                 JSlider source = (JSlider)e.getSource();
-                city.tileJobs[Integer.parseInt(source.getName())] = source.getValue();
+                city.tileJobWeights[Integer.parseInt(source.getName())] = source.getValue();
                 city.fixJobs();
-                l.setText(' ' + Integer.toString(source.getValue()) + ' ');
+                l.setText(' ' + Integer.toString(city.tileJobs[i]) + ' ');
                 update();
                 owner.repaint();
             }
@@ -221,7 +217,7 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
     public void stateChanged(ChangeEvent e)
     {
         JSlider source = (JSlider)e.getSource();
-        city.jobs[Integer.parseInt(source.getName())] = source.getValue();
+        city.jobWeights[Integer.parseInt(source.getName())] = source.getValue();
         city.fixJobs();
         update();
         owner.repaint();
@@ -249,20 +245,23 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
 
     private class Slider
     {
-        public Slider(JLabel name, JLabel value, JSlider slider)
+        public Slider(JLabel name, JLabel value, JSlider slider, boolean pad)
         {
             this.name = name;
             this.value = value;
             this.slider = slider;
+            this.pad = pad;
         }
 
         public void setValue(int x)
         {
-            slider.setValue(x);
-            this.value.setText(String.valueOf(x));
+            String value = String.valueOf(x);
+            if(pad) value = ' ' + value + ' ';
+            this.value.setText(value);
         }
 
         JLabel name, value;
         JSlider slider;
+        boolean pad;
     }
 }

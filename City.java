@@ -1,7 +1,11 @@
 public class City extends Structure
 {
     public int population, materials, houses, woodSource, stoneSource;
-    public int[] jobs = new int[Jobs.values().length], maxJobs = new int[Jobs.values().length], tileJobs = new int[9];
+    public int[] jobs = new int[Jobs.values().length], 
+        maxJobs = new int[Jobs.values().length], 
+        jobWeights = new int[Jobs.values().length],
+        tileJobs = new int[9],
+        tileJobWeights = new int[9];
     public TerrainType[] surroundings = new TerrainType[9];
     public Game game;
 
@@ -95,18 +99,60 @@ public class City extends Structure
     {
         int total = 0;
         for(int i = 0; i < jobs.length; i++)
-            total += jobs[i];
+            total += jobWeights[i];
 
         for(int i = 0; i < tileJobs.length; i++)
-            total += tileJobs[i];
+            total += tileJobWeights[i];
         
-        float ratio = total <= population ? 1 : (float)population / total;
+        float ratio = total == 0 ? 0 : (float)population / total;
 
+        int allocated = 0;
         for(int i = 0; i < jobs.length; i++)
-            jobs[i] = Math.min((int)(jobs[i] * ratio), maxJobs[i]);
+        {
+            int current = Math.min((int)(jobWeights[i] * ratio), maxJobs[i]);
+            jobs[i] = current;
+            allocated += current;
+        }
 
         for(int i = 0; i < tileJobs.length; i++)
-            tileJobs[i] = (int)(tileJobs[i] * ratio);
+        {
+            int current = Math.min((int)(tileJobWeights[i] * ratio), surroundings[i].capacity);
+            tileJobs[i] = current;
+            allocated += current;
+        }
+
+        if(total == 0) return;
+        for(int i = 0; i < population - allocated; i++)
+        {
+            int lowestIndex = -1;
+            float lowestRatio = 100000;
+
+            for(int j = 0; j < jobs.length; j++)
+            {
+                if(jobs[j] == maxJobs[j]) continue;
+                if((float)jobWeights[j] / total == 0) continue;
+                float currentRatio = ((float)jobs[j] / population) / ((float)jobWeights[j] / total); // actual fraction / requested fraction
+                if(currentRatio >= lowestRatio) continue;
+                lowestRatio = currentRatio;
+                lowestIndex = j;
+            }
+            
+            for(int j = 0; j < tileJobs.length; j++)
+            {
+                if(tileJobs[j] == surroundings[j].capacity) continue;
+                if((float)tileJobWeights[j] / total == 0) continue;
+                float currentRatio = ((float)tileJobs[j] / population) / ((float)tileJobWeights[j] / total); // actual fraction / requested fraction
+                if(currentRatio >= lowestRatio) continue;
+                lowestRatio = currentRatio;
+                lowestIndex = j | 0x0100;
+            }
+
+            if(lowestIndex == -1) break;
+            if((lowestIndex & 0x0100) == 0)
+                jobs[lowestIndex]++;
+            else
+                tileJobs[lowestIndex & 0xff]++;
+        }
     }
 
     public void build(int type) throws GameError
