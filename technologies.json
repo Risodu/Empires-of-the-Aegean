@@ -4,7 +4,7 @@
         "description": "Improve farming methods.\nEffect: +5 farmers per field",
         "cost": 10,
         "x": 0,
-        "y": 0,
+        "y": 4,
         "prerequisites": []
     },
     {
@@ -12,15 +12,39 @@
         "description": "Improve building methods\nEffect: Decrease house cost",
         "cost": 10,
         "x": 0,
-        "y": 1,
+        "y": 5,
         "prerequisites": []
+    },
+    {
+        "displayName": "Writing",
+        "description": "Create system of writing\nEffect:",
+        "cost": 10,
+        "x": 0,
+        "y": 7,
+        "prerequisites": []
+    },
+    {
+        "displayName": "Fishing",
+        "description": "Catching fish in ocean to be used as food\nEffect:",
+        "cost": 10,
+        "x": 2,
+        "y": 3,
+        "prerequisites": []
+    },
+    {
+        "displayName": "Animal domestification",
+        "description": "Domestify animals to get new source of food\nEffect:",
+        "cost": 10,
+        "x": 1,
+        "y": 3,
+        "prerequisites": [0]
     },
     {
         "displayName": "Baking",
         "description": "Process raw wheat into bread.\nEffect: unlocks bakery",
         "cost": 10,
         "x": 1,
-        "y": 0,
+        "y": 4,
         "prerequisites": [0, 1]
     },
     {
@@ -28,7 +52,7 @@
         "description": "Process raw wood into more useful planks.\nEffect: unlocks sawmill",
         "cost": 10,
         "x": 1,
-        "y": 1,
+        "y": 5,
         "prerequisites": [1]
     },
     {
@@ -36,7 +60,79 @@
         "description": "Mine stone from mountains to be used as building material.\nEffect: unlocks quarry",
         "cost": 10,
         "x": 1,
-        "y": 2,
+        "y": 6,
         "prerequisites": [1]
+    },
+    {
+        "displayName": "Library",
+        "description": "Build libraries to improve scientific progress\nEffect:",
+        "cost": 10,
+        "x": 1,
+        "y": 7,
+        "prerequisites": [1, 2]
+    },
+    {
+        "displayName": "Mathematics",
+        "description": "Develop mathematical concepts to improve precision of measurements and overall knowledge\nEffect:",
+        "cost": 10,
+        "x": 1,
+        "y": 8,
+        "prerequisites": [2]
+    },
+    {
+        "displayName": "Sailing",
+        "description": "Build vessels and travel through oceans\nEffect:",
+        "cost": 10,
+        "x": 3,
+        "y": 3,
+        "prerequisites": [3, 6]
+    },
+    {
+        "displayName": "Bronze working",
+        "description": "Produce bronze tools to improve overall work efficiency\nEffect:",
+        "cost": 10,
+        "x": 2,
+        "y": 6,
+        "prerequisites": [7]
+    },
+    {
+        "displayName": "Advanced construction",
+        "description": "Build more advanced buildings in more effective way\nEffect:",
+        "cost": 10,
+        "x": 2,
+        "y": 7,
+        "prerequisites": [7, 9]
+    },
+    {
+        "displayName": "Engineering",
+        "description": "Build advanced machines and devices\nEffect:",
+        "cost": 10,
+        "x": 2,
+        "y": 8,
+        "prerequisites": [9]
+    },
+    {
+        "displayName": "Advanced cooking",
+        "description": "Improve food processing methods\nEffect:",
+        "cost": 10,
+        "x": 3,
+        "y": 4,
+        "prerequisites": [3, 5]
+    },
+    {
+        "displayName": "Irrigation",
+        "description": "Introduce advanced irriration techniques\nEffect:",
+        "cost": 10,
+        "x": 3,
+        "y": 5,
+        "prerequisites": [5, 12]
+    },
+    {
+        "displayName": "Metallurgy",
+        "description": "Use new metals and better processing techniques\nEffect:",
+        "cost": 10,
+        "x": 3,
+        "y": 6,
+        "prerequisites": [11]
     }
 ]
