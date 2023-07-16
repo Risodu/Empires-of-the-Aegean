@@ -73,6 +73,13 @@ public class TechTree
         {
             case 0:
                 TerrainType.plain.capacity += 5;
+                break;
+            case 3:
+                TerrainType.sea.food += 2;
+                break;
+            case 15:
+                TerrainType.plain.food += 2;
+                break;
         }
     }
 
