@@ -1,7 +1,7 @@
 [
     {
         "displayName": "Agriculture",
-        "description": "Improve farming methods.\nEffect: +5 farmers per field",
+        "description": "Improve farming methods.\nEffect: +5 workers at plains",
         "cost": 10,
         "x": 0,
         "y": 4,
@@ -17,7 +17,7 @@
     },
     {
         "displayName": "Writing",
-        "description": "Create system of writing\nEffect:",
+        "description": "Create system of writing\nEffect: +25% culture gain",
         "cost": 10,
         "x": 0,
         "y": 7,
@@ -25,7 +25,7 @@
     },
     {
         "displayName": "Fishing",
-        "description": "Catching fish in ocean to be used as food\nEffect:",
+        "description": "Catching fish in ocean to be used as food\nEffect: +1 food at sea",
         "cost": 10,
         "x": 2,
         "y": 3,
@@ -33,7 +33,7 @@
     },
     {
         "displayName": "Animal domestification",
-        "description": "Domestify animals to get new source of food\nEffect:",
+        "description": "Domestify animals to get new source of food\nEffect: unlocks barn",
         "cost": 10,
         "x": 1,
         "y": 3,
@@ -65,7 +65,7 @@
     },
     {
         "displayName": "Library",
-        "description": "Build libraries to improve scientific progress\nEffect:",
+        "description": "Build libraries to improve scientific progress\nEffect: unlocks library",
         "cost": 10,
         "x": 1,
         "y": 7,
@@ -73,7 +73,7 @@
     },
     {
         "displayName": "Mathematics",
-        "description": "Develop mathematical concepts to improve precision of measurements and overall knowledge\nEffect:",
+        "description": "Develop mathematical concepts to improve precision of measurements and overall knowledge\nEffect: +20% materials and culture",
         "cost": 10,
         "x": 1,
         "y": 8,
@@ -89,7 +89,7 @@
     },
     {
         "displayName": "Bronze working",
-        "description": "Produce bronze tools to improve overall work efficiency\nEffect:",
+        "description": "Produce bronze tools to improve overall work efficiency\nEffect: +30% materials, +20% food",
         "cost": 10,
         "x": 2,
         "y": 6,
@@ -97,7 +97,7 @@
     },
     {
         "displayName": "Advanced construction",
-        "description": "Build more advanced buildings in more effective way\nEffect:",
+        "description": "Build more advanced buildings in more effective way\nEffect: +30% materials",
         "cost": 10,
         "x": 2,
         "y": 7,
@@ -105,7 +105,7 @@
     },
     {
         "displayName": "Engineering",
-        "description": "Build advanced machines and devices\nEffect:",
+        "description": "Build advanced machines and devices\nEffect: +25% of all resources",
         "cost": 10,
         "x": 2,
         "y": 8,
@@ -113,7 +113,7 @@
     },
     {
         "displayName": "Advanced cooking",
-        "description": "Improve food processing methods\nEffect:",
+        "description": "Improve food processing methods\nEffect: +30% food",
         "cost": 10,
         "x": 3,
         "y": 4,
@@ -121,7 +121,7 @@
     },
     {
         "displayName": "Irrigation",
-        "description": "Introduce advanced irriration techniques\nEffect:",
+        "description": "Introduce advanced irriration techniques\nEffect: +1 food per worker at plains",
         "cost": 10,
         "x": 3,
         "y": 5,
