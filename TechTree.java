@@ -81,6 +81,34 @@ public class TechTree
         return technologies[1].researched ? 2 : 3;
     }
 
+    public float foodBonus()
+    {
+        float temp = 1;
+        if(technologies[11].researched) temp *= 1.2; // Bronze working
+        if(technologies[13].researched) temp *= 1.25; // Engineering
+        if(technologies[14].researched) temp *= 1.3; // Advanced cooking
+        return temp;
+    }
+    
+    public float materialBonus()
+    {
+        float temp = 1;
+        if(technologies[9].researched) temp *= 1.2; // Mathematics
+        if(technologies[11].researched) temp *= 1.3; // Bronze working
+        if(technologies[12].researched) temp *= 1.3; // Advanced Construction
+        if(technologies[13].researched) temp *= 1.25; // Engineering
+        return temp;
+    }
+
+    public float cultureBonus()
+    {
+        float temp = 1;
+        if(technologies[2].researched) temp *= 1.25; // Writing
+        if(technologies[9].researched) temp *= 1.2; // Mathematics
+        if(technologies[13].researched) temp *= 1.25; // Engineering
+        return temp;
+    }
+
     public boolean bakeryUnlocked(){return technologies[2].researched;}
     public boolean sawmillUnlocked(){return technologies[3].researched;}
     public boolean quarryUnlocked(){return technologies[4].researched;}

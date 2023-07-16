@@ -57,9 +57,10 @@ public class City extends Structure
         {
             rawFood += surroundings[i].food * tileJobs[i];
         }
-        rawFood >>= 1;
-        int boosted = Math.min(rawFood, jobs[Jobs.baker.ordinal()] * 5);
-        float food = rawFood + boosted * 0.5f - population * 0.2f;
+        int boosted = Math.min(rawFood, jobs[Jobs.baker.ordinal()] * 10);
+        System.out.println(rawFood);
+        System.out.println(game.techTree.foodBonus());
+        float food = (rawFood + boosted * 0.5f) * game.techTree.foodBonus() * 0.5f - population * 0.2f;
         return Math.round(food > 0 ? food * 0.5f : food * 2);
     }
 
@@ -81,8 +82,8 @@ public class City extends Structure
             }
             materials += current;
         }
-        int boosted = Math.min(jobs[Jobs.sawmill_worker.ordinal()] * 5, wood) + Math.min(jobs[Jobs.quarry_worker.ordinal()] * 5, stone);
-        return (materials + Math.round(boosted * 0.5f)) >> 1;
+        int boosted = Math.min(jobs[Jobs.sawmill_worker.ordinal()] * 10, wood) + Math.min(jobs[Jobs.quarry_worker.ordinal()] * 10, stone);
+        return Math.round((materials + boosted * 0.5f) * game.techTree.materialBonus() * 0.5f);
     }
 
     public int getCultureIncrease()
@@ -92,7 +93,7 @@ public class City extends Structure
         {
             culture += surroundings[i].culture * tileJobs[i];
         }
-        return culture >> 1;
+        return Math.round(culture * game.techTree.cultureBonus() * 0.5f);
     }
 
     public void fixJobs()
