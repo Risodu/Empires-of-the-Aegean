@@ -1,6 +1,6 @@
 public enum StructureType
 {
-    city, road;
+    city, road, port;
 
     public int materialCost()
     {
@@ -8,6 +8,7 @@ public enum StructureType
         {
             case city: return 40;
             case road: return 5;
+            case port: return 20;
             default: return 0;
         }
     }
@@ -18,6 +19,15 @@ public enum StructureType
         {
             case city: return 10;
             default: return 0;
+        }
+    }
+
+    public boolean canBuild(Game game)
+    {
+        switch(this)
+        {
+            case port: return game.techTree.portUnlocked();
+            default: return true;
         }
     }
 }

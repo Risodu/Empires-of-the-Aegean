@@ -121,4 +121,6 @@ public class TechTree
     public boolean sawmillUnlocked(){return technologies[6].researched;}
     public boolean quarryUnlocked(){return technologies[7].researched;}
     public boolean libraryUnlocked(){return technologies[8].researched;}
+
+    public boolean portUnlocked(){return technologies[10].researched;}
 }

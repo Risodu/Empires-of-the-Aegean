@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 
 public class BuildDialog extends JDialog implements ActionListener, MouseListener
 {
-    private JButton changeSource, buildCity, buildRoad;
+    private JButton changeSource, buildCity, buildRoad, buildPort;
     private Application app;
     private Board board;
     private Game game;
@@ -34,6 +34,7 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
         changeSource = addButton("Select source city", "source");
         buildCity = addButton("City", "city");
         buildRoad = addButton("Road", "road");
+        buildPort = addButton("Port", "port");
 
         addWindowListener(new WindowListener()
         {
@@ -75,7 +76,9 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
             case "source": ResetSourceCity(); break;
             case "city": newStructureType = StructureType.city; break;
             case "road": newStructureType = StructureType.road; break;
+            case "port": newStructureType = StructureType.port; break;
         }
+        board.repaint();
     }
 
     @Override
@@ -98,6 +101,7 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
         app.toolbar.ShowMessage("Select build source city");
         buildCity.setEnabled(false);
         buildRoad.setEnabled(false);
+        buildPort.setEnabled(false);
     }
 
     private void SelectSourceCity(int selected)
@@ -115,6 +119,10 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
 
             buildRoad.setEnabled(city.materials >= 5);
             if(!(city.materials >= 5) && newStructureType == StructureType.road)
+                newStructureType = null;
+
+            buildPort.setEnabled(city.materials >= 20 && game.techTree.portUnlocked());
+            if(!(city.materials >= 20) && newStructureType == StructureType.port)
                 newStructureType = null;
         }
         catch(GameError err)
@@ -137,10 +145,11 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
             {
                 game.cities.add((City)building);
             }
-            else if(newStructureType == StructureType.road)
+            else if(newStructureType == StructureType.port)
             {
-                game.roads.add(building);
+                game.ports.add(building);
             }
+            game.structures.add(building);
             SelectSourceCity(buildsFrom);
             board.repaint();
         }
@@ -154,7 +163,15 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
     {
         if(game.GetCity(tile) != -1) throw new GameError("Structure already present");
         if(game.GetRoad(tile) != -1) throw new GameError("Structure already present");
-        if(game.GetTerrainAt(tile) == TerrainType.sea) throw new GameError("Can't build structure at water");
+        if(game.GetPort(tile) != -1) throw new GameError("Structure already present");
+        if(newStructureType != StructureType.port)
+        {
+            if(game.GetTerrainAt(tile) == TerrainType.sea)throw new GameError("Can't build structure at water");
+        }
+        else
+        {
+            if(game.GetTerrainAt(tile) != TerrainType.sea)throw new GameError("Port must be built at water");
+        }
         if(!game.RoadNearby(tile)) throw new GameError("There is no road nearby");
     }
     

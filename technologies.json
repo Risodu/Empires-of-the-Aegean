@@ -81,7 +81,7 @@
     },
     {
         "displayName": "Sailing",
-        "description": "Build vessels and travel through oceans\nEffect:",
+        "description": "Build vessels and travel through oceans\nEffect: unlocks port",
         "cost": 10,
         "x": 3,
         "y": 3,

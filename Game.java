@@ -6,7 +6,8 @@ public class Game
 {
     private NoiseGenerator noise;
     public List<City> cities = new ArrayList<City>();
-    public List<Structure> roads = new ArrayList<Structure>();
+    public List<Structure> structures = new ArrayList<Structure>();
+    public List<Structure> ports = new ArrayList<Structure>();
     public int culture;
     public TechTree techTree;
 
@@ -19,7 +20,9 @@ public class Game
         {
             Vector2 position = new Vector2(random.nextInt(10) + i, random.nextInt(10) + i);
             if(GetTerrainAt(position) == TerrainType.sea) continue;
-            cities.add(new City(position, this));
+            City starting = new City(position, this);
+            cities.add(starting);
+            structures.add(starting);
             break;
         }
     }
@@ -64,9 +67,19 @@ public class Game
 
     public int GetRoad(Vector2 pos)
     {
-        for(int i = 0; i < roads.size(); i++)
+        for(int i = 0; i < structures.size(); i++)
         {
-            if(roads.get(i).position.equals(pos))
+            if(structures.get(i).position.equals(pos))
+                return i;
+        }
+        return -1;
+    }
+
+    public int GetPort(Vector2 pos)
+    {
+        for(int i = 0; i < ports.size(); i++)
+        {
+            if(ports.get(i).position.equals(pos))
                 return i;
         }
         return -1;
@@ -74,9 +87,9 @@ public class Game
 
     public boolean RoadPresent(Vector2 pos)
     {
-        for(int i = 0; i < roads.size(); i++)
+        for(int i = 0; i < structures.size(); i++)
         {
-            if(roads.get(i).position.equals(pos))
+            if(structures.get(i).position.equals(pos))
                 return true;
         }
         return false;

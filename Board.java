@@ -84,9 +84,9 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
         }
 
         g2d.setColor(new Color(214, 156, 47));
-        for(int i = 0; i < game.roads.size(); i++)
+        for(int i = 0; i < game.structures.size(); i++)
         {
-            Vector2 pos = game.roads.get(i).position;
+            Vector2 pos = game.structures.get(i).position;
             drawRoad(pos, g2d);
         }
 
@@ -99,6 +99,17 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
             Vector2 screenPoint = camera.worldToScreen(pos.x + 0.2f, pos.y + 0.2f);
             circle.setFrame(screenPoint.x, screenPoint.y, camera.scale * 0.6f, camera.scale * 0.6f);
             g2d.fill(circle);
+        }
+
+        Rectangle2D sqare = new Rectangle2D.Float();
+        g2d.setColor(new Color(107, 70, 22));
+        for(int i = 0; i < game.ports.size(); i++)
+        {
+            Structure port = game.ports.get(i);
+            Vector2 pos = port.position;
+            Vector2 screenPoint = camera.worldToScreen(pos.x + 0.2f, pos.y + 0.2f);
+            sqare.setFrame(screenPoint.x, screenPoint.y, camera.scale * 0.6f, camera.scale * 0.6f);
+            g2d.draw(sqare);
         }
     }
 

@@ -23,7 +23,6 @@ public class City extends Structure
             }
         }
 
-        game.roads.add(new Structure(pos, StructureType.road));
         this.game = game;
     }
 
