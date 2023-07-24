@@ -57,9 +57,7 @@ public class City extends Structure
         {
             rawFood += surroundings[i].food * tileJobs[i];
         }
-        int boosted = Math.min(rawFood, jobs[Jobs.baker.ordinal()] * 10);
-        System.out.println(rawFood);
-        System.out.println(game.techTree.foodBonus());
+        int boosted = Math.min(rawFood, jobs[Jobs.herder.ordinal()] * 10) + Math.min(rawFood, jobs[Jobs.baker.ordinal()] * 10);
         float food = (rawFood + boosted * 0.5f) * game.techTree.foodBonus() * 0.5f - population * 0.2f;
         return Math.round(food > 0 ? food * 0.5f : food * 2);
     }
@@ -93,7 +91,8 @@ public class City extends Structure
         {
             culture += surroundings[i].culture * tileJobs[i];
         }
-        return Math.round(culture * game.techTree.cultureBonus() * 0.5f);
+        int boosted = Math.min(jobs[Jobs.librarian.ordinal()] * 10, culture);
+        return Math.round((culture + boosted * 0.5f) * game.techTree.cultureBonus() * 0.5f);
     }
 
     public void fixJobs()
@@ -162,7 +161,7 @@ public class City extends Structure
         {
             throw new GameError("You don't have enough materials (required: 10, current: " + materials + ")");
         }
-        maxJobs[Jobs.baker.ordinal() + type] += 5;
+        maxJobs[Jobs.herder.ordinal() + type] += 5;
         materials -= 10;
     }
 }

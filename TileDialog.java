@@ -60,9 +60,11 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
                 jobSliders[i] = addSlider(0, 100, city.jobWeights[i], i, Jobs.values()[i].getName());
             }
             
+            addButton("Build barn", "barn").setEnabled(game.techTree.barnUnlocked());
             addButton("Build bakery", "bakery").setEnabled(game.techTree.bakeryUnlocked());
             addButton("Build sawmill", "sawmill").setEnabled(game.techTree.sawmillUnlocked());
             addButton("Build quarry", "quarry").setEnabled(game.techTree.quarryUnlocked());
+            addButton("Build library", "library").setEnabled(game.techTree.libraryUnlocked());
 
             surroundings = new JPanel(new GridLayout(3, 3, 0, 0))
             {
@@ -230,9 +232,11 @@ public class TileDialog extends JDialog implements ChangeListener, ActionListene
         {
             switch(e.getActionCommand())
             {
-                case "bakery": city.build(0); break;
-                case "sawmill": city.build(1); break;
-                case "quarry": city.build(2); break;
+                case "barn": city.build(0); break;
+                case "bakery": city.build(1); break;
+                case "sawmill": city.build(2); break;
+                case "quarry": city.build(3); break;
+                case "library": city.build(4); break;
             }
         }
         catch(GameError err)

@@ -116,7 +116,9 @@ public class TechTree
         return temp;
     }
 
-    public boolean bakeryUnlocked(){return technologies[2].researched;}
-    public boolean sawmillUnlocked(){return technologies[3].researched;}
-    public boolean quarryUnlocked(){return technologies[4].researched;}
+    public boolean barnUnlocked(){return technologies[4].researched;}
+    public boolean bakeryUnlocked(){return technologies[5].researched;}
+    public boolean sawmillUnlocked(){return technologies[6].researched;}
+    public boolean quarryUnlocked(){return technologies[7].researched;}
+    public boolean libraryUnlocked(){return technologies[8].researched;}
 }
