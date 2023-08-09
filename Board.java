@@ -103,6 +103,7 @@ public class Board extends JPanel implements MouseMotionListener, MouseWheelList
 
         Rectangle2D sqare = new Rectangle2D.Float();
         g2d.setColor(new Color(107, 70, 22));
+        g2d.setStroke(new BasicStroke(camera.scale * 0.15f));
         for(int i = 0; i < game.ports.size(); i++)
         {
             Structure port = game.ports.get(i);

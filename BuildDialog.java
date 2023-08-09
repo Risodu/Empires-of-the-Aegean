@@ -209,15 +209,9 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
             queue.add(new SearchElement(game.ports.get(i).position, 0));
         }
 
-        reached.add(new Vector2(-1, 0));
-        System.out.println(reached.contains(new Vector2(-1, 0)));
-
         while(!queue.isEmpty())
         {
             SearchElement current = queue.remove();
-            System.out.println(current.pos.x);
-            System.out.println(current.pos.y);
-            System.out.println();
             boolean shore = false;
             for(int i = 0; i < 4; i++)
             {
