@@ -108,6 +108,19 @@ public class Game
         return false;
     }
 
+    public boolean PortNearby(Vector2 tile)
+    {
+        for(int i = -1; i < 2; i++)
+        {
+            for(int j = -1; j < 2; j++)
+            {
+                if(i == 0 && j == 0) continue;
+                if(GetPort(tile.add(new Vector2(i, j))) != -1) return true;
+            }
+        }
+        return false;
+    }
+
     public int getCultureIncrease()
     {
         int total = 0;

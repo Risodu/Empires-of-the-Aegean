@@ -5,6 +5,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -19,6 +25,7 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
     private Camera camera;
     private int buildsFrom = -1;
     private StructureType newStructureType;
+    private List<Vector2> portPlaces = new ArrayList<Vector2>();
 
     public BuildDialog(Application app, Game game, Camera camera)
     {
@@ -48,6 +55,7 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
         });
 
         ResetSourceCity();
+        UpdatePortPlaces();
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -151,6 +159,7 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
             }
             game.structures.add(building);
             SelectSourceCity(buildsFrom);
+            UpdatePortPlaces();
             board.repaint();
         }
         catch(GameError err)
@@ -166,13 +175,65 @@ public class BuildDialog extends JDialog implements ActionListener, MouseListene
         if(game.GetPort(tile) != -1) throw new GameError("Structure already present");
         if(newStructureType != StructureType.port)
         {
-            if(game.GetTerrainAt(tile) == TerrainType.sea)throw new GameError("Can't build structure at water");
+            if(game.GetTerrainAt(tile) == TerrainType.sea) throw new GameError("Can't build structure at water");
         }
         else
         {
-            if(game.GetTerrainAt(tile) != TerrainType.sea)throw new GameError("Port must be built at water");
+            if(game.GetTerrainAt(tile) != TerrainType.sea) throw new GameError("Port must be built at water");
+            if(game.PortNearby(tile)) throw new GameError("Port can't be built right next to another port");
+            if(portPlaces.contains(tile)) return;
         }
         if(!game.RoadNearby(tile)) throw new GameError("There is no road nearby");
+    }
+
+    public void UpdatePortPlaces()
+    {
+        class SearchElement
+        {
+            Vector2 pos;
+            int dist;
+
+            public SearchElement(Vector2 pos, int dist)
+            {
+                this.pos = pos;
+                this.dist = dist;
+            }
+        }
+
+        portPlaces.clear();
+        Queue<SearchElement> queue = new ArrayDeque<SearchElement>();
+        Set<Vector2> reached = new HashSet<Vector2>();
+        
+        for(int i = 0; i < game.ports.size(); i++)
+        {
+            queue.add(new SearchElement(game.ports.get(i).position, 0));
+        }
+
+        reached.add(new Vector2(-1, 0));
+        System.out.println(reached.contains(new Vector2(-1, 0)));
+
+        while(!queue.isEmpty())
+        {
+            SearchElement current = queue.remove();
+            System.out.println(current.pos.x);
+            System.out.println(current.pos.y);
+            System.out.println();
+            boolean shore = false;
+            for(int i = 0; i < 4; i++)
+            {
+                SearchElement next = new SearchElement(current.pos.add(Vector2.near[i]), current.dist + 1);
+                if(game.GetTerrainAt(next.pos) != TerrainType.sea)
+                {
+                    shore = true;
+                    continue;
+                }
+                if(next.dist > 10) continue;
+                if(reached.contains(next.pos)) continue;
+                reached.add(next.pos);
+                queue.add(next);
+            }
+            if(shore) portPlaces.add(current.pos);
+        }
     }
     
     @Override

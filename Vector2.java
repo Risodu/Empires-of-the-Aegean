@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Vector2
 {
     public float x, y;
@@ -8,9 +10,17 @@ public class Vector2
         this.y = y;
     }
 
-    public boolean equals(Vector2 other)
+    @Override
+    public boolean equals(Object object)
     {
+        Vector2 other = (Vector2)object;
         return Float.compare(x, other.x) == 0 && Float.compare(y, other.y) == 0;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(x, y);
     }
 
     public Vector2 add(Vector2 other)
@@ -23,4 +33,6 @@ public class Vector2
         right = new Vector2(1, 0),
         up = new Vector2(0, -1),
         down = new Vector2(0, 1);
+
+    public static Vector2[] near = new Vector2[]{right, left, up, down};
 }
